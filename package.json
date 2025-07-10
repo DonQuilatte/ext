@@ -11,7 +11,14 @@
     "test:all": "npm run test:smoke && npm run test:functional && npm run test:e2e",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "test:unified": "node tests/utils/test-runner.js",
+    "test:unified:smoke": "node tests/utils/test-runner.js --smoke",
+    "test:unified:functional": "node tests/utils/test-runner.js --functional",
+    "test:unified:e2e": "node tests/utils/test-runner.js --e2e",
+    "test:performance": "node -e \"const puppeteer = require('puppeteer'); const PerformanceMonitor = require('./tests/utils/performance-monitor'); (async () => { const browser = await puppeteer.launch(); const page = await browser.newPage(); const monitor = new PerformanceMonitor(page); await monitor.runPerformanceTest(); await browser.close(); })()\"",
+    "test:quick": "npm run test:unified:smoke",
+    "test:full": "npm run test:unified && npm run test:performance"
   },
   "devDependencies": {
     "puppeteer": "^22.0.0",

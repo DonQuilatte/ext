@@ -218,7 +218,7 @@ setInterval(async () => {
   try {
     // Auto-save conversations if enabled
     const state = stateManager.getState();
-    if (state.settings.general.autoSave) {
+    if (state.user.preferences.autoSave) {
       const conversations = await apiClient.getConversations();
       await stateManager.updateConversations({ conversations });
     }

@@ -32,7 +32,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
-    "types": ["chrome", "jest", "node"]
+    "types": ["chrome", "jest", "node"],
+    "baseUrl": "./src",
+    "paths": {
+      "@shared/*": ["shared/*"],
+      "@utils": ["shared/utils"],
+      "@types": ["shared/types"],
+      "@api": ["shared/api"],
+      "@state": ["shared/state"]
+    }
   },
   "include": [
     "src/**/*"

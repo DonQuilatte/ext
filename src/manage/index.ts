@@ -676,7 +676,7 @@ async function handleSaveGeneral(): Promise<void> {
     const settings = {
       user: {
         preferences: {
-          theme: (document.getElementById('theme-select') as HTMLSelectElement)?.value || 'auto',
+          theme: ((document.getElementById('theme-select') as HTMLSelectElement)?.value || 'auto') as 'auto' | 'light' | 'dark',
           language: (document.getElementById('language-select') as HTMLSelectElement)?.value || 'en',
           enableNotifications: (document.getElementById('notifications-toggle') as HTMLInputElement)?.checked || false,
           autoSave: (document.getElementById('auto-save-toggle') as HTMLInputElement)?.checked || false,

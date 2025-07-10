@@ -134,6 +134,33 @@ async function loadScript(scriptPath) {
     }
 }
 
+// Simulate Response and Headers constructors for browser compatibility
+global.Response = function(body, init) {
+    this.body = body;
+    this.status = init?.status || 200;
+    this.statusText = init?.statusText || 'OK';
+    this.headers = init?.headers || new global.Headers();
+    this.ok = this.status >= 200 && this.status < 300;
+    
+    this.json = () => Promise.resolve(JSON.parse(body || '{}'));
+    this.text = () => Promise.resolve(body || '');
+    return this;
+};
+
+global.Headers = function(init) {
+    this.headers = new Map();
+    if (init) {
+        Object.keys(init).forEach(key => {
+            this.headers.set(key.toLowerCase(), init[key]);
+        });
+    }
+    
+    this.get = (name) => this.headers.get(name.toLowerCase());
+    this.set = (name, value) => this.headers.set(name.toLowerCase(), value);
+    this.has = (name) => this.headers.has(name.toLowerCase());
+    return this;
+};
+
 // Simulate fetch API with blocking
 global.fetch = function(url, options) {
     console.log(`🌐 [TEST-RUNNER] Fetch request: ${url}`);
@@ -144,10 +171,11 @@ global.fetch = function(url, options) {
         return Promise.reject(new Error('Blocked by CORS policy (simulated)'));
     }
     
-    return Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ success: true, data: 'mock data' })
-    });
+    return Promise.resolve(new global.Response(JSON.stringify({ success: true, data: 'mock data' }), {
+        status: 200,
+        statusText: 'OK',
+        headers: new global.Headers({ 'Content-Type': 'application/json' })
+    }));
 };
 
 // Main test execution

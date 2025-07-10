@@ -43,19 +43,40 @@
                 if (isBlockedDomain) {
                     console.log('[Fix CORS Issues] Blocking external request to:', urlString);
                     
-                    // Return a mock successful response instead of making the request
-                    return Promise.resolve(new Response(JSON.stringify({
+                    // Create mock response compatible with both browser and test environments
+                    const mockResponseData = {
                         success: true,
                         message: 'Request blocked to prevent CORS error',
                         data: [],
                         blocked_url: urlString
-                    }), {
+                    };
+                    
+                    // Check if Response constructor is available (browser environment)
+                    if (typeof Response !== 'undefined') {
+                        try {
+                            return Promise.resolve(new Response(JSON.stringify(mockResponseData), {
+                                status: 200,
+                                statusText: 'OK',
+                                headers: new Headers({
+                                    'Content-Type': 'application/json'
+                                })
+                            }));
+                        } catch (error) {
+                            console.log('[Fix CORS Issues] Response constructor failed, using fallback');
+                        }
+                    }
+                    
+                    // Fallback for test environment or when Response is not available
+                    return Promise.resolve({
+                        ok: true,
                         status: 200,
                         statusText: 'OK',
-                        headers: new Headers({
-                            'Content-Type': 'application/json'
-                        })
-                    }));
+                        headers: {
+                            get: (name) => name === 'content-type' ? 'application/json' : null
+                        },
+                        json: () => Promise.resolve(mockResponseData),
+                        text: () => Promise.resolve(JSON.stringify(mockResponseData))
+                    });
                 }
                 
                 // For allowed requests, use original fetch with proper binding
@@ -69,8 +90,16 @@
         };
         
         // Preserve the original fetch properties to prevent "Illegal invocation"
-        Object.setPrototypeOf(window.fetch, originalFetch);
-        Object.defineProperty(window.fetch, 'name', { value: 'fetch' });
+        try {
+            if (originalFetch && typeof Object.setPrototypeOf !== 'undefined') {
+                Object.setPrototypeOf(window.fetch, originalFetch);
+            }
+            if (typeof Object.defineProperty !== 'undefined') {
+                Object.defineProperty(window.fetch, 'name', { value: 'fetch' });
+            }
+        } catch (error) {
+            console.log('[Fix CORS Issues] Could not set fetch properties, but override is active');
+        }
         
         console.log('[Fix CORS Issues] Fetch override installed');
     }

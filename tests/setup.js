@@ -139,10 +139,22 @@ afterAll(async () => {
 beforeEach(async () => {
   // Clear any previous test state
   if (global.page) {
-    await global.page.evaluate(() => {
-      localStorage.clear();
-      sessionStorage.clear();
-    });
+    try {
+      const url = await global.page.url();
+      // Only attempt to clear storage on allowed origins
+      if (url.startsWith('http') || url.startsWith('chrome-extension://')) {
+        await global.page.evaluate(() => {
+          try {
+            localStorage.clear();
+          } catch (e) {}
+          try {
+            sessionStorage.clear();
+          } catch (e) {}
+        });
+      }
+    } catch (err) {
+      // Ignore errors (e.g., DOMException)
+    }
   }
 });
 

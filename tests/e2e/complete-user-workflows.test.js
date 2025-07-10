@@ -1,12 +1,11 @@
 const { describe, test, expect, beforeAll, afterAll, beforeEach } = require('@jest/globals');
 
 describe('🎯 E2E Tests - Complete User Workflows', () => {
-  let browser;
   let page;
 
   beforeAll(async () => {
-    browser = await require('puppeteer').launch();
-    page = await browser.newPage();
+    // Use the global page from jest-puppeteer
+    page = global.page;
     
     // Monitor all errors for E2E testing
     page.on('console', msg => {
@@ -17,9 +16,7 @@ describe('🎯 E2E Tests - Complete User Workflows', () => {
   });
 
   afterAll(async () => {
-    if (browser) {
-      await browser.close();
-    }
+    // Cleanup is handled by jest-puppeteer
   });
 
   beforeEach(async () => {

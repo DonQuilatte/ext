@@ -1,9 +1,16 @@
 {
-  "name": "ishka-extension-tests",
-  "version": "1.0.0",
-  "description": "Comprehensive testing suite for Ishka Chrome Extension",
+  "name": "ishka-extension",
+  "version": "3.9.7",
+  "description": "The Ultimate ChatGPT Experience! Prompt Library, Export, Pin, Subfolders, Search, RTL, Save Prompts, Download as MP3 & more!",
   "main": "index.js",
   "scripts": {
+    "build": "webpack --mode=production",
+    "build:dev": "webpack --mode=development",
+    "dev": "webpack --mode=development --watch",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/**/*.{ts,js}",
+    "lint:fix": "eslint src/**/*.{ts,js} --fix",
+    "format": "prettier --write src/**/*.{ts,js,css,json}",
     "test": "jest",
     "test:smoke": "jest --testPathPattern=smoke",
     "test:functional": "jest --testPathPattern=functional", 
@@ -11,13 +18,30 @@
     "test:all": "npm run test:smoke && npm run test:functional && npm run test:e2e",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean"
   },
   "devDependencies": {
-    "puppeteer": "^22.0.0",
+    "typescript": "^5.3.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.0",
+    "ts-loader": "^9.5.0",
+    "eslint": "^8.55.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "prettier": "^3.1.0",
     "jest": "^29.7.0",
+    "@types/chrome": "^0.0.246",
+    "@types/jest": "^29.5.0",
+    "puppeteer": "^22.0.0",
     "jest-puppeteer": "^10.0.1",
-    "@jest/globals": "^29.7.0"
+    "@jest/globals": "^29.7.0",
+    "rimraf": "^5.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.0",
+    "style-loader": "^3.3.0",
+    "mini-css-extract-plugin": "^2.7.0"
   },
   "jest": {
     "preset": "jest-puppeteer",
@@ -31,7 +55,7 @@
     "type": "git",
     "url": "git+https://github.com/DonQuilatte/ext.git"
   },
-  "keywords": ["chrome-extension", "testing", "puppeteer", "chatgpt"],
+  "keywords": ["chrome-extension", "chatgpt", "typescript", "webpack"],
   "author": "",
   "license": "ISC",
   "bugs": {

@@ -1,0 +1,87 @@
+{
+  "manifest_version": 3,
+  "version": "3.9.6",
+  "name": "Ishka",
+  "description": "The Ultimate ChatGPT Experience! Prompt Library, Export, Pin, Subfolders, Search, RTL, Save Prompts, Download as MP3 & more!",
+  "action": {
+    "default_icon": {
+      "16": "assets/images/icon16.png",
+      "24": "assets/images/icon24.png",
+      "32": "assets/images/icon32.png",
+      "48": "assets/images/icon48.png",
+      "128": "assets/images/icon128.png"
+    },
+    "default_title": "Ishka Extension",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "assets/images/icon16.png",
+    "24": "assets/images/icon24.png",
+    "32": "assets/images/icon32.png",
+    "48": "assets/images/icon48.png",
+    "128": "assets/images/icon128.png"
+  },
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://api.openai.com/*",
+    "https://auth.openai.com/*",
+    "https://openai.com/*"
+  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "scripts/unified-context-fix.js",
+        "scripts/health-check.js",
+        "api/mock-backend.js",
+        "scripts/manual-premium-enable.js",
+        "scripts/debug-console.js",
+        "api/localBackend.js",
+        "scripts/devmode.js",
+        "html/devSettings.js",
+        "scripts/content.js",
+        "scripts/verify-offline.js",
+        "scripts/plan-text-override.js",
+        "scripts/plan-debug.js",
+        "scripts/extension-details-toggle.js",
+        "scripts/real-api-bridge.js"
+      ],
+      "css": [
+        "styles/styles.css",
+        "styles/modal.css",
+        "styles/snackbar.css",
+        "styles/loader.css",
+        "styles/form.css",
+        "styles/variables.css",
+        "styles/switch.css",
+        "styles/prompts.css",
+        "styles/pinnedChats.css",
+        "styles/gptsCollapse.css",
+        "styles/moveChat.css",
+        "styles/searchHistory.css",
+        "styles/paidUserBadge.css",
+        "styles/voiceDownload.css",
+        "styles/mediaGallery.css",
+        "styles/direction.css",
+        "styles/featuresCollapse.css",
+        "styles/addGPTs.css",
+        "styles/promptLibrary.css",
+        "styles/promptValues.css",
+        "styles/chainValues.css",
+        "styles/dnd.css",
+        "styles/infoAndUpdates.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": [
+    "storage",
+    "webRequest",
+    "activeTab"
+  ]
+}

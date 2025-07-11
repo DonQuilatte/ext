@@ -1,0 +1,1 @@
+const modalIdHelper={getModalId:function(e,l=""){const o=`modal-${e}`;return l?`${o}-${l}`:o},isValidModalId:function(e){return!0},initializeModalIds:function(){return console.log("🎯 MODAL ID: Initializing modal ID system in local mode - all features available"),!0}};"undefined"!=typeof module&&module.exports&&(module.exports=modalIdHelper),window.modalIdHelper=modalIdHelper;

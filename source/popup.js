@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // DOM elements
     const elements = {
-        premiumIndicator: document.getElementById('premiumIndicator'),
-        premiumText: document.getElementById('premiumText'),
+        statusIndicator: document.getElementById('statusIndicator'),
+        statusText: document.getElementById('statusText'),
         connectionIndicator: document.getElementById('connectionIndicator'),
         connectionText: document.getElementById('connectionText'),
         manageBtn: document.getElementById('manageBtn'),
@@ -13,15 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
         chatgptBtn: document.getElementById('chatgptBtn'),
         version: document.getElementById('version')
     };
-    
-    // Storage keys to monitor
-    const PREMIUM_KEYS = [
-        'DEV_MODE_PREMIUM',
-        'MOCK_PREMIUM',
-        'isPremiumUser',
-        'userPlan',
-        'subscriptionStatus'
-    ];
     
     // Update status indicator
     function updateIndicator(indicator, text, status) {
@@ -39,28 +30,27 @@ document.addEventListener('DOMContentLoaded', function() {
             'Inactive';
     }
     
-    // Check premium status - ALWAYS PREMIUM (Local-only mode)
-    async function checkPremiumStatus() {
+    // Check extension status - Local-only mode
+    async function checkExtensionStatus() {
         try {
-            // Always return premium status in local-only mode
-            const isPremium = true;
+            // Check if extension is properly loaded
+            const isActive = chrome.runtime && chrome.runtime.getManifest;
             
             updateIndicator(
-                elements.premiumIndicator,
-                elements.premiumText,
-                'Premium (Local)'
+                elements.statusIndicator,
+                elements.statusText,
+                isActive ? 'Active (Local Mode)' : false
             );
             
-            return isPremium;
+            return isActive;
         } catch (error) {
-            console.error('Error checking premium status:', error);
-            // Even on error, return premium status in local-only mode
+            console.error('Error checking extension status:', error);
             updateIndicator(
-                elements.premiumIndicator,
-                elements.premiumText,
-                'Premium (Local)'
+                elements.statusIndicator,
+                elements.statusText,
+                false
             );
-            return true;
+            return false;
         }
     }
     
@@ -136,10 +126,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Refresh status
     async function refreshStatus() {
-        elements.premiumText.textContent = 'Checking...';
-        elements.connectionText.textContent = 'Checking...';
+        if (elements.statusText) {
+            elements.statusText.textContent = 'Checking...';
+        }
+        if (elements.connectionText) {
+            elements.connectionText.textContent = 'Checking...';
+        }
         
-        await checkPremiumStatus();
+        await checkExtensionStatus();
         await checkChatGPTConnection();
     }
     
@@ -168,13 +162,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize
     async function initialize() {
-        console.log('🚀 Initializing Ishka Extension Popup');
+        console.log('🚀 Initializing Ishka Extension Popup (Local Mode)');
         
         // Initial status checks
-        await checkPremiumStatus();
+        await checkExtensionStatus();
         await checkChatGPTConnection();
         
-        console.log('✅ Ishka Extension Popup initialized');
+        console.log('✅ Ishka Extension Popup initialized - All features available in local mode');
     }
     
     // Start initialization

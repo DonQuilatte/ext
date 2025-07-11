@@ -46,9 +46,9 @@
         console.log('🔍 [API-BLOCKING-TEST] Testing essential API endpoints...');
         
         const essentialEndpoints = [
-            'https://api.infi-dev.com/ai-toolbox/folder/get',
-            'https://api.infi-dev.com/ai-toolbox/conversation/get',
-            'https://api.infi-dev.com/ai-toolbox/auth/generate-jwt'
+            'https://api.infi-dev.com/example-removed/folder/get',
+            'https://api.infi-dev.com/example-removed/conversation/get',
+            'https://api.infi-dev.com/example-removed/auth/generate-jwt'
         ];
         
         for (const endpoint of essentialEndpoints) {
@@ -76,9 +76,9 @@
         console.log('🔍 [API-BLOCKING-TEST] Testing problematic API endpoints...');
         
         const problematicEndpoints = [
-            'https://api.infi-dev.com/ai-toolbox/auth/jwks',
+            'https://api.infi-dev.com/example-removed/auth/jwks',
             'https://auth.openai.com/jwks',
-            'https://api.infi-dev.com/ai-toolbox/subscription/check'
+            'https://api.infi-dev.com/example-removed/subscription/check'
         ];
         
         for (const endpoint of problematicEndpoints) {

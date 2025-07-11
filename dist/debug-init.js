@@ -1,0 +1,1 @@
+const debugLog=document.getElementById("debug-log"),debugInfo=`Extension Version: 1.0.0\nBrowser: ${navigator.userAgent}\nSync Status: ${chrome?.storage?"Available":"Unavailable"}\nConnection Status: Connected\nTimestamp: ${(new Date).toISOString()}`;debugLog&&(debugLog.textContent=debugInfo),console.log("Debug info loaded successfully.");

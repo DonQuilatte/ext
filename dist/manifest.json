@@ -36,20 +36,7 @@
         "https://chatgpt.com/*"
       ],
       "js": [
-        "scripts/unified-context-fix.js",
-        "scripts/health-check.js",
-        "api/mock-backend.js",
-        "scripts/manual-premium-enable.js",
-        "scripts/debug-console.js",
-        "api/localBackend.js",
-        "scripts/devmode.js",
-        "html/devSettings.js",
-        "scripts/content.js",
-        "scripts/verify-offline.js",
-        "scripts/plan-text-override.js",
-        "scripts/plan-debug.js",
-        "scripts/extension-details-toggle.js",
-        "scripts/real-api-bridge.js"
+        "scripts/new-menu-system.js"
       ],
       "css": [
         "styles/styles.css",
@@ -64,7 +51,6 @@
         "styles/gptsCollapse.css",
         "styles/moveChat.css",
         "styles/searchHistory.css",
-        "styles/paidUserBadge.css",
         "styles/voiceDownload.css",
         "styles/mediaGallery.css",
         "styles/direction.css",

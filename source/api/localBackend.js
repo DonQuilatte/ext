@@ -3,7 +3,7 @@
 
 class LocalBackend {
   constructor() {
-    this.baseURL = 'https://api.infi-dev.com/ai-toolbox/';
+    this.baseURL = 'https://api.infi-dev.com/example-removed/';
     this.isLocalMode = true;
     this.initializeLocalStorage();
   }
@@ -20,9 +20,20 @@ class LocalBackend {
     };
 
     for (const [key, value] of Object.entries(defaults)) {
-      const existing = await chrome.storage.local.get(key);
-      if (!existing[key]) {
-        await chrome.storage.local.set({ [key]: value });
+      try {
+        const existing = await chrome.storage.local.get(key);
+        // Handle case where existing is undefined or doesn't contain the key
+        if (!existing || existing[key] === undefined || existing[key] === null) {
+          await chrome.storage.local.set({ [key]: value });
+        }
+      } catch (error) {
+        console.warn(`🚨 LOCAL BACKEND: Failed to initialize storage for ${key}:`, error);
+        // Set default value even if storage access fails
+        try {
+          await chrome.storage.local.set({ [key]: value });
+        } catch (setError) {
+          console.error(`🚨 LOCAL BACKEND: Critical storage error for ${key}:`, setError);
+        }
       }
     }
   }
@@ -33,7 +44,7 @@ class LocalBackend {
     
     // Parse the URL to determine endpoint
     const urlObj = new URL(url);
-    const path = urlObj.pathname.replace('/ai-toolbox/', '');
+    const path = urlObj.pathname.replace('/example-removed/', '');
     const searchParams = urlObj.searchParams;
     
     // Route to appropriate local handler
@@ -351,8 +362,13 @@ class LocalBackend {
 
   // Helper methods for local storage
   async getLocalData(key) {
-    const result = await chrome.storage.local.get(key);
-    return result[key] || [];
+    try {
+      const result = await chrome.storage.local.get(key);
+      return (result && result[key]) ? result[key] : [];
+    } catch (error) {
+      console.warn(`🚨 LOCAL BACKEND: Failed to get data for ${key}:`, error);
+      return [];
+    }
   }
 
   async setLocalData(key, data) {
@@ -361,7 +377,7 @@ class LocalBackend {
 
   // Method to replace original fetch calls
   async localFetch(url, options = {}) {
-    if (url.includes('api.infi-dev.com/ai-toolbox/')) {
+    if (url.includes('api.infi-dev.com/example-removed/')) {
       console.log(`🔄 LOCAL BACKEND: Redirecting ${url} to local handler`);
       return {
         ok: true,
@@ -381,7 +397,7 @@ const localBackend = new LocalBackend();
 // Override global fetch for API interception
 const originalFetch = window.fetch;
 window.fetch = function(url, options) {
-  if (typeof url === 'string' && url.includes('api.infi-dev.com/ai-toolbox/')) {
+  if (typeof url === 'string' && url.includes('api.infi-dev.com/example-removed/')) {
     return localBackend.localFetch(url, options);
   }
   return originalFetch.apply(this, arguments);
@@ -393,4 +409,4 @@ if (typeof window !== 'undefined') {
 }
 
 console.log('🏠 LOCAL BACKEND: Local backend service initialized');
-console.log('🔄 All API calls to api.infi-dev.com/ai-toolbox/ will be handled locally');
+console.log('🔄 All API calls to api.infi-dev.com/example-removed/ will be handled locally');

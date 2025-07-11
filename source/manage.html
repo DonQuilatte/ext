@@ -249,6 +249,188 @@
             white-space: pre-wrap;
         }
         
+        /* Developer Debug Dashboard Styles */
+        .debug-dashboard {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .debug-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .debug-tab {
+            padding: 8px 16px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .debug-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .debug-tab.active {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .debug-tab-content {
+            display: none;
+        }
+        
+        .debug-tab-content.active {
+            display: block;
+        }
+        
+        .debug-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .debug-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .debug-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #FFD700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .debug-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .debug-item:last-child {
+            border-bottom: none;
+        }
+        
+        .debug-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .debug-value {
+            color: white;
+            font-weight: 500;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+        }
+        
+        .debug-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .debug-log {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            color: #E0E0E0;
+        }
+        
+        .debug-progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+            display: none;
+        }
+        
+        .debug-progress.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #4CAF50;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .error-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .error-item {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        
+        .error-time {
+            color: #FFA726;
+            font-weight: 600;
+        }
+        
+        .error-message {
+            color: #FF6B6B;
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .debug-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .debug-tabs {
+                flex-direction: column;
+            }
+            
+            .debug-tab {
+                text-align: center;
+            }
+        }
+        
         .live-indicator {
             display: inline-flex;
             align-items: center;
@@ -300,7 +482,7 @@
         <div class="header">
             <div class="logo">I</div>
             <h1>Ishka Extension Management</h1>
-            <p class="subtitle">Premium Features & ChatGPT Integration Control</p>
+            <p class="subtitle">ChatGPT Integration Control</p>
         </div>
         
         <div class="dashboard">
@@ -345,16 +527,16 @@
             
             <div class="card">
                 <div class="card-title">
-                    <span>⭐ Premium Features</span>
-                    <span class="status-indicator" id="premiumStatus"></span>
+                    <span>⭐ Extension Features</span>
+                    <span class="status-indicator online" id="featuresStatus"></span>
                 </div>
                 
                 <div class="status-item">
-                    <span class="status-label">Plan Status</span>
-                    <span class="status-value" id="planStatus">
+                    <span class="status-label">All Features</span>
+                    <span class="status-value" id="allFeaturesStatus">
                         <span class="live-indicator">
-                            <span class="status-indicator" id="planIndicator"></span>
-                            <span id="planText">Free</span>
+                            <span class="status-indicator online" id="allFeaturesIndicator"></span>
+                            <span id="allFeaturesText">Permanently Enabled</span>
                         </span>
                     </span>
                 </div>
@@ -362,40 +544,34 @@
                 <div class="status-item">
                     <span class="status-label">Manage Chats</span>
                     <span class="status-value" id="manageChatStatus">
-                        <span id="manageChatText">Disabled</span>
+                        <span id="manageChatText">Enabled</span>
                     </span>
                 </div>
                 
                 <div class="status-item">
                     <span class="status-label">Manage Folders</span>
                     <span class="status-value" id="manageFolderStatus">
-                        <span id="manageFolderText">Disabled</span>
+                        <span id="manageFolderText">Enabled</span>
                     </span>
                 </div>
                 
                 <div class="status-item">
                     <span class="status-label">Manage Prompts</span>
                     <span class="status-value" id="managePromptStatus">
-                        <span id="managePromptText">Disabled</span>
+                        <span id="managePromptText">Enabled</span>
                     </span>
                 </div>
             </div>
             
-            <div class="card premium-controls">
-                <div class="card-title">🎛️ Premium Controls</div>
+            <div class="card features-status">
+                <div class="card-title">🎛️ Extension Status</div>
                 
-                <div class="toggle-section">
-                    <div class="toggle-info">
-                        <div class="toggle-title">Premium Features</div>
-                        <div class="toggle-description">Enable advanced ChatGPT management features</div>
-                    </div>
-                    <div class="toggle-switch" id="premiumToggle">
-                        <div class="toggle-slider"></div>
-                    </div>
+                <div class="status-message" style="background: rgba(76, 175, 80, 0.2); border: 1px solid rgba(76, 175, 80, 0.3); border-radius: 8px; padding: 16px; margin: 16px 0;">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">✅ All Features Enabled</div>
+                    <div style="font-size: 14px; opacity: 0.9;">All features are now permanently enabled for all users.</div>
                 </div>
                 
                 <div class="actions">
-                    <button class="btn btn-primary" id="enableBtn">Enable Premium</button>
                     <button class="btn btn-secondary" id="refreshBtn">Refresh Status</button>
                     <button class="btn btn-secondary" id="debugBtn">Debug Info</button>
                     <button class="btn btn-danger" id="resetBtn">Reset Settings</button>
@@ -407,8 +583,272 @@
                 <div class="debug-content" id="debugContent">Click "Debug Info" to view extension diagnostics...</div>
             </div>
         </div>
+        
+        <!-- Comprehensive Developer Debug Dashboard -->
+        <div class="debug-dashboard">
+            <div class="card-title">🔧 Developer Debug Info</div>
+            
+            <div class="debug-tabs">
+                <button class="debug-tab active" data-tab="system">System Info</button>
+                <button class="debug-tab" data-tab="extension">Extension State</button>
+                <button class="debug-tab" data-tab="errors">Error Tracking</button>
+                <button class="debug-tab" data-tab="api">API Testing</button>
+                <button class="debug-tab" data-tab="performance">Performance</button>
+                <button class="debug-tab" data-tab="export">Export & Reports</button>
+            </div>
+            
+            <!-- System Information Tab -->
+            <div class="debug-tab-content active" id="system-tab">
+                <div class="debug-grid">
+                    <div class="debug-card">
+                        <div class="debug-card-title">🖥️ Browser Information</div>
+                        <div class="debug-item">
+                            <span class="debug-label">User Agent</span>
+                            <span class="debug-value" id="userAgent">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Platform</span>
+                            <span class="debug-value" id="platform">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Language</span>
+                            <span class="debug-value" id="language">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Timezone</span>
+                            <span class="debug-value" id="timezone">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-card">
+                        <div class="debug-card-title">🔌 Extension Details</div>
+                        <div class="debug-item">
+                            <span class="debug-label">Extension ID</span>
+                            <span class="debug-value" id="extensionId">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Version</span>
+                            <span class="debug-value" id="extensionVersion">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Manifest Version</span>
+                            <span class="debug-value" id="manifestVersion">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Permissions</span>
+                            <span class="debug-value" id="permissions">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-card">
+                        <div class="debug-card-title">💾 Storage Information</div>
+                        <div class="debug-item">
+                            <span class="debug-label">Local Storage</span>
+                            <span class="debug-value" id="localStorage">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Sync Storage</span>
+                            <span class="debug-value" id="syncStorage">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Storage Usage</span>
+                            <span class="debug-value" id="storageUsage">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-card">
+                        <div class="debug-card-title">🌐 Network Status</div>
+                        <div class="debug-item">
+                            <span class="debug-label">Online Status</span>
+                            <span class="debug-value" id="onlineStatus">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Connection Type</span>
+                            <span class="debug-value" id="connectionType">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">CORS Status</span>
+                            <span class="debug-value" id="corsStatus">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Extension State Tab -->
+            <div class="debug-tab-content" id="extension-tab">
+                <div class="debug-grid">
+                    <div class="debug-card">
+                        <div class="debug-card-title">📜 Content Scripts</div>
+                        <div class="debug-item">
+                            <span class="debug-label">Scripts Loaded</span>
+                            <span class="debug-value" id="scriptsLoaded">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">DOM Ready</span>
+                            <span class="debug-value" id="domReady">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">ChatGPT Integration</span>
+                            <span class="debug-value" id="chatgptIntegration">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-card">
+                        <div class="debug-card-title">⚙️ Feature States</div>
+                        <div class="debug-item">
+                            <span class="debug-label">Manage Chats</span>
+                            <span class="debug-value" id="manageChatFeature">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Manage Folders</span>
+                            <span class="debug-value" id="manageFolderFeature">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Manage Prompts</span>
+                            <span class="debug-value" id="managePromptFeature">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-card">
+                        <div class="debug-card-title">🔄 Background Worker</div>
+                        <div class="debug-item">
+                            <span class="debug-label">Worker Status</span>
+                            <span class="debug-value" id="workerStatus">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Message Port</span>
+                            <span class="debug-value" id="messagePort">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-card">
+                        <div class="debug-card-title">🎯 DOM Integration</div>
+                        <div class="debug-item">
+                            <span class="debug-label">Elements Found</span>
+                            <span class="debug-value" id="elementsFound">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Event Listeners</span>
+                            <span class="debug-value" id="eventListeners">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Error Tracking Tab -->
+            <div class="debug-tab-content" id="errors-tab">
+                <div class="debug-actions">
+                    <button class="btn btn-secondary" id="clearErrorsBtn">Clear Errors</button>
+                    <button class="btn btn-secondary" id="exportErrorsBtn">Export Errors</button>
+                </div>
+                <div class="error-list" id="errorList">
+                    <div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.6);">
+                        No errors recorded yet
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API Testing Tab -->
+            <div class="debug-tab-content" id="api-tab">
+                <div class="debug-actions">
+                    <button class="btn btn-primary" id="runAllTestsBtn">Run All Tests</button>
+                    <button class="btn btn-secondary" id="testChatGPTBtn">Test ChatGPT</button>
+                    <button class="btn btn-secondary" id="testLocalFunctionsBtn">Test Local Functions</button>
+                    <button class="btn btn-secondary" id="testIntegrationBtn">Test Integration</button>
+                </div>
+                
+                <div class="debug-progress" id="testProgress">
+                    <div>Running tests...</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                
+                <div class="debug-log" id="testResults">
+                    Click "Run All Tests" to execute comprehensive API testing
+                </div>
+            </div>
+            
+            <!-- Performance Tab -->
+            <div class="debug-tab-content" id="performance-tab">
+                <div class="debug-grid">
+                    <div class="debug-card">
+                        <div class="debug-card-title">⚡ Load Times</div>
+                        <div class="debug-item">
+                            <span class="debug-label">Extension Load</span>
+                            <span class="debug-value" id="extensionLoadTime">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Content Script</span>
+                            <span class="debug-value" id="contentScriptTime">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">DOM Ready</span>
+                            <span class="debug-value" id="domReadyTime">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-card">
+                        <div class="debug-card-title">🧠 Memory Usage</div>
+                        <div class="debug-item">
+                            <span class="debug-label">JS Heap Size</span>
+                            <span class="debug-value" id="heapSize">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Used Heap</span>
+                            <span class="debug-value" id="usedHeap">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Heap Limit</span>
+                            <span class="debug-value" id="heapLimit">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-card">
+                        <div class="debug-card-title">📊 Script Performance</div>
+                        <div class="debug-item">
+                            <span class="debug-label">Scripts Executed</span>
+                            <span class="debug-value" id="scriptsExecuted">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Average Exec Time</span>
+                            <span class="debug-value" id="avgExecTime">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="debug-card">
+                        <div class="debug-card-title">🎯 DOM Metrics</div>
+                        <div class="debug-item">
+                            <span class="debug-label">DOM Nodes</span>
+                            <span class="debug-value" id="domNodes">Loading...</span>
+                        </div>
+                        <div class="debug-item">
+                            <span class="debug-label">Event Listeners</span>
+                            <span class="debug-value" id="totalEventListeners">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Export & Reports Tab -->
+            <div class="debug-tab-content" id="export-tab">
+                <div class="debug-actions">
+                    <button class="btn btn-primary" id="generateReportBtn">Generate Full Report</button>
+                    <button class="btn btn-secondary" id="exportSettingsBtn">Export Settings</button>
+                    <button class="btn btn-secondary" id="exportLogsBtn">Export Logs</button>
+                    <button class="btn btn-secondary" id="copyDebugInfoBtn">Copy Debug Info</button>
+                </div>
+                
+                <div class="debug-log" id="exportResults">
+                    <div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.6);">
+                        Click "Generate Full Report" to create a comprehensive debug report
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <script src="manage.js"></script>
+    <script src="debug-init.js"></script>
 </body>
 </html>

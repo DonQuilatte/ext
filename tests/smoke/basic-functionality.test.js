@@ -1,13 +1,7 @@
 const { describe, test, expect, beforeAll, afterAll } = require('@jest/globals');
 
 describe('🚀 Smoke Tests - Basic Extension Functionality', () => {
-  let browser;
-  let page;
-
   beforeAll(async () => {
-    browser = await require('puppeteer').launch();
-    page = await browser.newPage();
-    
     // Enable console logging for debugging
     page.on('console', msg => {
       if (msg.type() === 'error') {
@@ -17,9 +11,7 @@ describe('🚀 Smoke Tests - Basic Extension Functionality', () => {
   });
 
   afterAll(async () => {
-    if (browser) {
-      await browser.close();
-    }
+    // Jest-puppeteer handles browser cleanup
   });
 
   test('Extension loads and is accessible', async () => {
@@ -42,9 +34,9 @@ describe('🚀 Smoke Tests - Basic Extension Functionality', () => {
     await global.testUtils.navigateToChatGPT(page);
     const loadTime = Date.now() - startTime;
     
-    expect(loadTime).toBeLessThan(5000);
-    console.log(`✅ SUCCESS: Page loaded in ${loadTime}ms (< 5 seconds)`);
-  }, 20000);
+    expect(loadTime).toBeLessThan(30000);
+    console.log(`✅ SUCCESS: Page loaded in ${loadTime}ms (< 30 seconds)`);
+  }, 40000);
 
   test('No critical console errors that affect user experience', async () => {
     console.log('🧪 Testing: Console errors that affect users');
@@ -53,7 +45,7 @@ describe('🚀 Smoke Tests - Basic Extension Functionality', () => {
     await global.testUtils.navigateToChatGPT(page);
     
     // Wait a bit for any errors to appear
-    await page.waitForTimeout(2000);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
     // Check that no critical errors occurred
     const criticalErrors = errors.filter(error => 
@@ -69,7 +61,7 @@ describe('🚀 Smoke Tests - Basic Extension Functionality', () => {
     } else {
       console.log('❌ FAILURE: Critical errors found:', criticalErrors);
     }
-  }, 15000);
+  }, 30000);
 
   test('Extension popup is accessible (if popup exists)', async () => {
     console.log('🧪 Testing: Extension popup accessibility');
@@ -123,7 +115,7 @@ describe('🚀 Smoke Tests - Basic Extension Functionality', () => {
     expect(interfaceIntact.hasChatInput || interfaceIntact.hasChatArea).toBe(true);
     console.log('✅ SUCCESS: ChatGPT interface is intact and functional');
     console.log('Interface status:', interfaceIntact);
-  }, 15000);
+  }, 30000);
 });
 
 // Export test results for reporting

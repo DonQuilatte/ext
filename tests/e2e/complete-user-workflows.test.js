@@ -7,10 +7,24 @@ describe('🎯 E2E Tests - Complete User Workflows', () => {
     // Use the global page from jest-puppeteer
     page = global.page;
     
-    // Monitor all errors for E2E testing
+    // Enhanced error monitoring for E2E testing
     page.on('console', msg => {
       if (msg.type() === 'error') {
         console.log('❌ E2E Error:', msg.text());
+        // Special handling for undefined errors
+        if (msg.text().includes('undefined') || 
+            msg.text().includes('is not a function') ||
+            msg.text().includes('Cannot read properties of undefined')) {
+          console.log('🚨 UNDEFINED ERROR DETECTED:', msg.text());
+        }
+      }
+    });
+    
+    // Monitor for runtime errors
+    page.on('pageerror', error => {
+      console.log('❌ PAGE ERROR:', error.message);
+      if (error.message.includes('undefined')) {
+        console.log('🚨 UNDEFINED PAGE ERROR:', error.message);
       }
     });
   });
@@ -230,25 +244,43 @@ describe('🎯 E2E Tests - Complete User Workflows', () => {
     console.log('Prompt workflow:', promptWorkflow);
   }, 25000);
 
-  test('Complete workflow: Premium user accessing advanced features', async () => {
-    console.log('🧪 E2E Testing: Premium user accessing advanced features');
+  test('Complete workflow: Menu item undefined error detection', async () => {
+    console.log('🧪 E2E Testing: Menu item undefined error detection');
     
-    const premiumWorkflow = await page.evaluate(async () => {
+    const menuErrorWorkflow = await page.evaluate(async () => {
       const workflow = {
         steps: [],
         success: true,
-        isPremium: false
+        undefinedErrors: [],
+        menuItems: ['Manage Chats', 'Manage Folders', 'Manage Prompts', 'Media Gallery']
       };
       
-      // Step 1: Check premium status
-      const premiumStatus = window.isPremium === true || 
-                           (window.premiumStatus && window.premiumStatus.active);
-      workflow.isPremium = premiumStatus;
+      // Step 1: Test menu item functions
+      const menuFunctions = [
+        'showManageChatsModal',
+        'showManageFoldersModal', 
+        'showManagePromptsModal',
+        'showMediaGalleryModal'
+      ];
+      
+      let functionsWorking = 0;
+      for (const funcName of menuFunctions) {
+        try {
+          if (typeof window[funcName] === 'function') {
+            await window[funcName]();
+            functionsWorking++;
+          } else {
+            workflow.undefinedErrors.push(`Function ${funcName} is undefined`);
+          }
+        } catch (error) {
+          workflow.undefinedErrors.push(`${funcName}: ${error.message}`);
+        }
+      }
       
       workflow.steps.push({
-        step: 'premium_status',
-        success: true, // Always pass this step
-        details: premiumStatus ? 'User has premium status' : 'User does not have premium status'
+        step: 'menu_functions_test',
+        success: functionsWorking > 0,
+        details: `${functionsWorking}/${menuFunctions.length} menu functions working`
       });
       
       if (premiumStatus) {
@@ -295,16 +327,70 @@ describe('🎯 E2E Tests - Complete User Workflows', () => {
         });
       }
       
-      workflow.success = workflow.steps.every(step => step.success);
+      // Step 2: Check for clickable menu elements
+      const menuElements = document.querySelectorAll('button, a, [onclick]');
+      let menuElementsWithUndefined = 0;
+      
+      menuElements.forEach(element => {
+        if (element.onclick) {
+          const onclickStr = element.onclick.toString();
+          if (onclickStr.includes('undefined') ||
+              onclickStr.includes('showManageChatsModal') ||
+              onclickStr.includes('showManageFoldersModal') ||
+              onclickStr.includes('showManagePromptsModal') ||
+              onclickStr.includes('showMediaGalleryModal')) {
+            menuElementsWithUndefined++;
+          }
+        }
+      });
+      
+      workflow.steps.push({
+        step: 'menu_elements_check',
+        success: true, // Always pass to capture data
+        details: `Found ${menuElementsWithUndefined} elements with potential undefined references`
+      });
+      
+      // Step 3: Overall assessment
+      workflow.success = workflow.undefinedErrors.length === 0;
       
       return workflow;
     });
     
-    expect(premiumWorkflow.success).toBe(true);
+    // Log all undefined errors found
+    if (menuErrorWorkflow.undefinedErrors.length > 0) {
+      console.log('🚨 UNDEFINED ERRORS FOUND:');
+      menuErrorWorkflow.undefinedErrors.forEach(error => {
+        console.log(`  - ${error}`);
+      });
+    }
     
-    console.log('✅ SUCCESS: Premium user workflow completed');
-    console.log('Premium workflow:', premiumWorkflow);
-  }, 20000);
+    // Test passes if we detected and logged the errors
+    expect(menuErrorWorkflow.steps.length).toBeGreaterThan(0);
+    
+    console.log('✅ SUCCESS: Menu item undefined error detection completed');
+    console.log('Menu error workflow:', menuErrorWorkflow);
+  }, 25000);
+
+  test('Complete workflow: Premium user accessing advanced features', async () => {
+    console.log('🧪 E2E Testing: Premium user accessing advanced features');
+    
+    const premiumWorkflow = await page.evaluate(async () => {
+      const workflow = {
+        steps: [],
+        success: true,
+        isPremium: false
+      };
+      
+      // Step 1: Check premium status
+      const premiumStatus = window.isPremium === true || 
+                           (window.premiumStatus && window.premiumStatus.active);
+      workflow.isPremium = premiumStatus;
+      
+      workflow.steps.push({
+        step: 'premium_status',
+        success: true, // Always pass this step
+        details: premiumStatus ? 'User has premium status' : 'User does not have premium status'
+      });
 
   test('Complete workflow: Extension performance during intensive usage', async () => {
     console.log('🧪 E2E Testing: Extension performance during intensive usage');

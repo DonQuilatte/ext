@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modal Functions Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #45a049;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Modal Functions Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Status</h2>
+        <div id="testStatus" class="status">Loading...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Modal Functions</h2>
+        <button class="test-button" onclick="testFunction('showManageChatsModal')">Test Manage Chats</button>
+        <button class="test-button" onclick="testFunction('showManageFoldersModal')">Test Manage Folders</button>
+        <button class="test-button" onclick="testFunction('showManagePromptsModal')">Test Manage Prompts</button>
+        <button class="test-button" onclick="testFunction('showMediaGalleryModal')">Test Media Gallery</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="testResults"></div>
+    </div>
+
+    <!-- Load the modal functions -->
+    <script src="dist/scripts/global-modal-injector.js"></script>
+    <script src="dist/scripts/manageChats/showManageChatsModal.js"></script>
+    <script src="dist/scripts/manageFolders/showManageFoldersModal.js"></script>
+    <script src="dist/scripts/managePrompts/showManagePromptsModal.js"></script>
+    <script src="dist/scripts/mediaGallery/showMediaGalleryModal.js"></script>
+    
+    <script>
+        // Test script
+        const modalFunctions = [
+            'showManageChatsModal',
+            'showManageFoldersModal', 
+            'showManagePromptsModal',
+            'showMediaGalleryModal'
+        ];
+        
+        function updateStatus(message, isSuccess = true) {
+            const statusDiv = document.getElementById('testStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status ' + (isSuccess ? 'success' : 'error');
+        }
+        
+        function addResult(message, isSuccess = true) {
+            const resultsDiv = document.getElementById('testResults');
+            const resultItem = document.createElement('div');
+            resultItem.className = 'status ' + (isSuccess ? 'success' : 'error');
+            resultItem.textContent = message;
+            resultsDiv.appendChild(resultItem);
+        }
+        
+        function testFunction(funcName) {
+            console.log(`Testing ${funcName}...`);
+            
+            if (typeof window[funcName] === 'function') {
+                try {
+                    window[funcName]();
+                    addResult(`✅ ${funcName} executed successfully`, true);
+                    
+                    // Auto-close the modal after 2 seconds for testing
+                    setTimeout(() => {
+                        const modalId = funcName.replace('show', '').replace('Modal', '').toLowerCase() + 'Modal';
+                        const modal = document.getElementById(modalId);
+                        if (modal) {
+                            modal.remove();
+                            console.log(`Auto-closed ${funcName} modal for testing`);
+                        }
+                    }, 2000);
+                } catch (error) {
+                    addResult(`❌ ${funcName} failed: ${error.message}`, false);
+                }
+            } else {
+                addResult(`❌ ${funcName} is not a function (type: ${typeof window[funcName]})`, false);
+            }
+        }
+        
+        // Initial test
+        function runInitialTest() {
+            console.log('🧪 Running initial modal function test...');
+            let availableCount = 0;
+            
+            modalFunctions.forEach(funcName => {
+                if (typeof window[funcName] === 'function') {
+                    availableCount++;
+                    console.log(`✅ ${funcName} is available`);
+                } else {
+                    console.log(`❌ ${funcName} is not available (type: ${typeof window[funcName]})`);
+                }
+            });
+            
+            if (availableCount === modalFunctions.length) {
+                updateStatus(`🎯 All ${modalFunctions.length} modal functions are available and ready!`, true);
+            } else {
+                updateStatus(`⚠️ ${availableCount}/${modalFunctions.length} modal functions are available`, false);
+            }
+        }
+        
+        // Run test after page loads
+        window.addEventListener('load', () => {
+            setTimeout(runInitialTest, 500);
+        });
+    </script>
+</body>
+</html>

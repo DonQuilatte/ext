@@ -1,0 +1,328 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Chrome Extension Lifecycle Test Report</title>
+        <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 20px; background: #f5f5f5; }
+            .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .header { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
+            .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+            .metric { background: #f8f9fa; padding: 15px; border-radius: 6px; text-align: center; }
+            .metric-value { font-size: 24px; font-weight: bold; color: #333; }
+            .metric-label { font-size: 14px; color: #666; margin-top: 5px; }
+            .pass { color: #28a745; }
+            .fail { color: #dc3545; }
+            .warning { color: #ffc107; }
+            .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 6px; }
+            .section h3 { margin-top: 0; color: #333; }
+            .recommendations { margin-top: 20px; }
+            .recommendation { padding: 10px; margin: 10px 0; border-radius: 4px; border-left: 4px solid; }
+            .error-list { max-height: 300px; overflow-y: auto; background: #f8f9fa; padding: 10px; border-radius: 4px; }
+            .console-message { font-family: monospace; font-size: 12px; margin: 5px 0; padding: 5px; background: #fff; border-radius: 3px; }
+            .console-error { border-left: 3px solid #dc3545; }
+            .console-warning { border-left: 3px solid #ffc107; }
+            .console-info { border-left: 3px solid #17a2b8; }
+            .health-score { font-size: 32px; font-weight: bold; text-align: center; padding: 20px; }
+            .health-excellent { color: #28a745; }
+            .health-good { color: #ffc107; }
+            .health-poor { color: #dc3545; }
+            table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+            th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+            th { background-color: #f8f9fa; }
+            .timestamp { font-size: 12px; color: #666; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🔍 Chrome Extension Lifecycle Test Report</h1>
+                <p class="timestamp">Generated: 2025-07-11T17:09:40.886Z</p>
+                <p>Extension ID: <code>N/A</code></p>
+                <p>Test Duration: 9s</p>
+            </div>
+            
+            <div class="summary">
+                <div class="metric">
+                    <div class="metric-value fail">
+                        33%
+                    </div>
+                    <div class="metric-label">Health Score</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value pass">1</div>
+                    <div class="metric-label">Tests Passed</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value fail">1</div>
+                    <div class="metric-label">Tests Failed</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value fail">1</div>
+                    <div class="metric-label">Critical Errors</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value pass">0</div>
+                    <div class="metric-label">Premium Issues</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📋 Test Results</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Test</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr>
+                                <td>uninstallReinstall</td>
+                                <td class="fail">
+                                    FAILED
+                                </td>
+                                <td>N/A</td>
+                            </tr>
+                        
+                            <tr>
+                                <td>chatgptLoad</td>
+                                <td class="pass">
+                                    SUCCESS
+                                </td>
+                                <td>N/A</td>
+                            </tr>
+                        
+                            <tr>
+                                <td>validation</td>
+                                <td class="warning">
+                                    {"premiumErrors":{"status":"PASS","count":0,"messages":[]},"jsErrors":{"status":"FAIL","count":1,"messages":[{"type":"error","text":"Failed to load resource: the server responded with a status of 403 ()","timestamp":"2025-07-11T17:09:34.550Z","location":{"url":"https://chatgpt.com/backend-api/edge"}}]},"uiElements":{"status":"FAIL","elements":{"toolboxButton":false,"manageFolders":false,"managePrompts":true,"premiumBadges":false,"extensionPopup":false,"chatInput":true,"sidebar":false,"extensionElementsCount":0}},"manifest":{"status":"FAIL","issues":["Premium-related content found in manifest"],"version":"3.9.6"}}
+                                </td>
+                                <td>{
+  "premiumErrors": {
+    "status": "PASS",
+    "count": 0,
+    "messages": []
+  },
+  "jsErrors": {
+    "status": "FAIL",
+    "count": 1,
+    "messages": [
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 403 ()",
+        "timestamp": "2025-07-11T17:09:34.550Z",
+        "location": {
+          "url": "https://chatgpt.com/backend-api/edge"
+        }
+      }
+    ]
+  },
+  "uiElements": {
+    "status": "FAIL",
+    "elements": {
+      "toolboxButton": false,
+      "manageFolders": false,
+      "managePrompts": true,
+      "premiumBadges": false,
+      "extensionPopup": false,
+      "chatInput": true,
+      "sidebar": false,
+      "extensionElementsCount": 0
+    }
+  },
+  "manifest": {
+    "status": "FAIL",
+    "issues": [
+      "Premium-related content found in manifest"
+    ],
+    "version": "3.9.6"
+  }
+}</td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h3>⚠️ Recommendations</h3>
+                <div class="recommendations">
+                    
+                        <div class="recommendation" style="border-left-color: #ff4444">
+                            <strong>CRITICAL:</strong> 1 critical errors detected - review console logs and fix immediately
+                        </div>
+                    
+                        <div class="recommendation" style="border-left-color: #ff8800">
+                            <strong>HIGH:</strong> No extension UI elements detected - extension may not be injecting properly
+                        </div>
+                    
+                </div>
+            </div>
+
+            
+            <div class="section">
+                <h3>🚨 Critical Errors</h3>
+                <div class="error-list">
+                    
+                        <div class="console-message console-error">
+                            <strong>[uninstallExtension]</strong> Error in invocation of management.setEnabled(string id, boolean enabled, optional function callback): No matching signature.
+                            <div class="timestamp">2025-07-11T17:09:33.220Z</div>
+                        </div>
+                    
+                </div>
+            </div>
+            
+
+            
+            <div class="section">
+                <h3>💬 Console Messages (Last 50)</h3>
+                <div class="error-list">
+                    
+                        <div class="console-message console-error">
+                            <strong>[ERROR]</strong> Failed to load resource: the server responded with a status of 403 ()
+                            <div class="timestamp">2025-07-11T17:09:34.550Z</div>
+                        </div>
+                    
+                </div>
+            </div>
+            
+
+            
+            <div class="section">
+                <h3>🔍 Extension Analysis</h3>
+                <h4>Manifest Info:</h4>
+                <pre>{
+  "version": "3.9.6",
+  "permissions": [
+    "storage",
+    "webRequest",
+    "activeTab"
+  ],
+  "contentScripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "scripts/robust-initialization.js",
+        "scripts/content-error-handler.js",
+        "scripts/debug-diagnostics.js",
+        "scripts/targeted-fix.js",
+        "scripts/safe-storage-wrapper.js",
+        "scripts/debug-test.js",
+        "scripts/duplicate-id-fix.js",
+        "scripts/remove-premium-gates.js",
+        "scripts/property-interceptor.js",
+        "scripts/early-init.js",
+        "scripts/unified-context-fix.js",
+        "scripts/health-check.js",
+        "api/local-only-backend.js",
+        "scripts/debug-console.js",
+        "api/localBackend.js",
+        "scripts/devmode.js",
+        "html/devSettings.js",
+        "scripts/content-fix.js",
+        "scripts/content.js",
+        "scripts/verify-offline.js",
+        "scripts/plan-text-override.js",
+        "scripts/plan-debug.js",
+        "scripts/extension-details-toggle.js",
+        "scripts/real-api-bridge.js",
+        "scripts/free-extension-summary.js",
+        "scripts/global-modal-injector.js",
+        "scripts/manageChats/showManageChatsModal.js",
+        "scripts/manageFolders/showManageFoldersModal.js",
+        "scripts/managePrompts/showManagePromptsModal.js",
+        "scripts/mediaGallery/showMediaGalleryModal.js"
+      ],
+      "css": [
+        "styles/styles.css",
+        "styles/modal.css",
+        "styles/snackbar.css",
+        "styles/loader.css",
+        "styles/form.css",
+        "styles/variables.css",
+        "styles/switch.css",
+        "styles/prompts.css",
+        "styles/pinnedChats.css",
+        "styles/gptsCollapse.css",
+        "styles/moveChat.css",
+        "styles/searchHistory.css",
+        "styles/voiceDownload.css",
+        "styles/mediaGallery.css",
+        "styles/direction.css",
+        "styles/featuresCollapse.css",
+        "styles/addGPTs.css",
+        "styles/promptLibrary.css",
+        "styles/promptValues.css",
+        "styles/chainValues.css",
+        "styles/dnd.css",
+        "styles/infoAndUpdates.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  }
+}</pre>
+                
+                
+                <h4>⚠️ Suspicious Patterns Found:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>File</th>
+                            <th>Matches</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr>
+                                <td>run-e2e-tests.js</td>
+                                <td>Premium, premium</td>
+                            </tr>
+                        
+                            <tr>
+                                <td>utils/helpers/showPremiumRequiredModal.js</td>
+                                <td>Premium, premium</td>
+                            </tr>
+                        
+                            <tr>
+                                <td>utils/helpers/prompts.js</td>
+                                <td>Premium, premium</td>
+                            </tr>
+                        
+                            <tr>
+                                <td>utils/helpers/handleModalBackButtonClick.js</td>
+                                <td>Premium, premium</td>
+                            </tr>
+                        
+                            <tr>
+                                <td>utils/helpers/getModalProps.js</td>
+                                <td>Premium, premium</td>
+                            </tr>
+                        
+                            <tr>
+                                <td>utils/helpers/getModalLogic.js</td>
+                                <td>Premium, premium</td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+                
+            </div>
+            
+
+            <div class="section">
+                <h3>📊 Summary</h3>
+                <p><strong>Overall Status:</strong> 🔴 Needs Attention</p>
+                <p><strong>Next Steps:</strong> Review and address the recommendations above</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    

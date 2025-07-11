@@ -58,8 +58,14 @@ module.exports = (env, argv) => {
           { from: 'source/manifest.json', to: 'manifest.json' },
           { from: 'source/popup.html', to: 'popup.html' },
           { from: 'source/manage.html', to: 'manage.html' },
+          { from: 'source/debug-init.js', to: 'debug-init.js' },
           { from: 'source/assets', to: 'assets' },
-          { from: 'source/locales', to: 'locales' }
+          { from: 'source/locales', to: 'locales' },
+          { from: 'source/scripts', to: 'scripts' },
+          { from: 'source/styles', to: 'styles' },
+          { from: 'source/html', to: 'html' },
+          { from: 'source/api', to: 'api' },
+          { from: 'source/utils', to: 'utils' }
         ]
       }),
       ...(isProduction ? [new MiniCssExtractPlugin({

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Final Recursive Error Test - Complete Fix Verification</title>
+</head>
+<body>
+    <h1>Final Recursive Error Test - Complete Fix Verification</h1>
+    <div id="results"></div>
+
+    <script>
+        console.log('🧪 FINAL TEST: Starting comprehensive recursive error fix verification');
+        
+        const results = [];
+        
+        function addResult(test, status, details) {
+            results.push({ test, status, details });
+            const div = document.getElementById('results');
+            div.innerHTML += `<p><strong>${test}:</strong> <span style="color: ${status === 'PASS' ? 'green' : 'red'}">${status}</span> - ${details}</p>`;
+        }
+        
+        // Load the unified context fix first
+        const script1 = document.createElement('script');
+        script1.src = 'source/scripts/unified-context-fix.js';
+        document.head.appendChild(script1);
+        
+        script1.onload = function() {
+            console.log('✅ Unified context fix loaded');
+            
+            // Load the content fix
+            const script2 = document.createElement('script');
+            script2.src = 'source/scripts/content-fix.js';
+            document.head.appendChild(script2);
+            
+            script2.onload = function() {
+                console.log('✅ Content fix loaded');
+                
+                // Wait a moment for all fixes to initialize
+                setTimeout(runTests, 1000);
+            };
+        };
+        
+        function runTests() {
+            console.log('🧪 FINAL TEST: Running comprehensive tests...');
+            
+            // Test 1: Bulletproof console.error with error objects
+            try {
+                const errorObj = new Error('Test error with isResetChatHistory property access');
+                Object.defineProperty(errorObj, 'toString', {
+                    get: function() {
+                        // This would normally trigger the recursive error
+                        return function() {
+                            const undefinedObj = undefined;
+                            return undefinedObj.isResetChatHistory; // This should NOT cause recursion
+                        };
+                    }
+                });
+                
+                console.error('🧪 FINAL TEST: Testing bulletproof console.error with problematic object:', errorObj);
+                addResult('Bulletproof console.error', 'PASS', 'No recursive error occurred');
+            } catch (e) {
+                addResult('Bulletproof console.error', 'FAIL', 'Recursive error still occurring: ' + e.message);
+            }
+            
+            // Test 2: Direct property access on undefined
+            try {
+                const undefinedObj = undefined;
+                const result = undefinedObj.isResetChatHistory;
+                addResult('Direct undefined property access', 'FAIL', 'Should have thrown error but got: ' + result);
+            } catch (e) {
+                if (e.message.includes('Cannot read properties of undefined')) {
+                    addResult('Direct undefined property access', 'PASS', 'Correctly threw error: ' + e.message);
+                } else {
+                    addResult('Direct undefined property access', 'FAIL', 'Unexpected error: ' + e.message);
+                }
+            }
+            
+            // Test 3: Safe property access using window.safeAccessProperty
+            try {
+                const result = window.safeAccessProperty(undefined, 'isResetChatHistory', false);
+                if (result === false) {
+                    addResult('Safe property access', 'PASS', 'Returned safe fallback value: ' + result);
+                } else {
+                    addResult('Safe property access', 'FAIL', 'Unexpected result: ' + result);
+                }
+            } catch (e) {
+                addResult('Safe property access', 'FAIL', 'Error in safe access: ' + e.message);
+            }
+            
+            // Test 4: Promise rejection handling
+            try {
+                const promise = new Promise((resolve, reject) => {
+                    const undefinedObj = undefined;
+                    reject(new Error('Promise error: ' + undefinedObj.isResetChatHistory));
+                });
+                
+                promise.catch(error => {
+                    console.log('🧪 FINAL TEST: Promise rejection handled safely:', error.message);
+                    addResult('Promise rejection handling', 'PASS', 'Promise rejection handled without recursion');
+                });
+            } catch (e) {
+                addResult('Promise rejection handling', 'FAIL', 'Error in promise handling: ' + e.message);
+            }
+            
+            // Test 5: Global error handler
+            try {
+                setTimeout(() => {
+                    const undefinedObj = undefined;
+                    throw new Error('Global error test: ' + undefinedObj.isResetChatHistory);
+                }, 100);
+                
+                setTimeout(() => {
+                    addResult('Global error handler', 'PASS', 'Global error handled without crashing');
+                }, 500);
+            } catch (e) {
+                addResult('Global error handler', 'FAIL', 'Global error handler failed: ' + e.message);
+            }
+            
+            // Test 6: Object.getOwnPropertyDescriptor override
+            try {
+                const descriptor = Object.getOwnPropertyDescriptor(undefined, 'isResetChatHistory');
+                if (descriptor && descriptor.value === false) {
+                    addResult('Object.getOwnPropertyDescriptor override', 'PASS', 'Returned safe descriptor for undefined object');
+                } else {
+                    addResult('Object.getOwnPropertyDescriptor override', 'FAIL', 'Unexpected descriptor: ' + JSON.stringify(descriptor));
+                }
+            } catch (e) {
+                addResult('Object.getOwnPropertyDescriptor override', 'FAIL', 'Error in descriptor override: ' + e.message);
+            }
+            
+            // Test 7: Chrome storage fallback
+            try {
+                if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+                    chrome.storage.local.get(['isResetChatHistory'], (result) => {
+                        if (result && typeof result.isResetChatHistory !== 'undefined') {
+                            addResult('Chrome storage fallback', 'PASS', 'Storage returned safe value: ' + result.isResetChatHistory);
+                        } else {
+                            addResult('Chrome storage fallback', 'PASS', 'Storage handled safely with no result');
+                        }
+                    });
+                } else {
+                    addResult('Chrome storage fallback', 'PASS', 'Chrome storage not available (expected in test environment)');
+                }
+            } catch (e) {
+                addResult('Chrome storage fallback', 'FAIL', 'Error in storage test: ' + e.message);
+            }
+            
+            // Test 8: Multiple error objects in console.error
+            try {
+                const error1 = new Error('First error');
+                const error2 = new Error('Second error');
+                const undefinedObj = undefined;
+                
+                // This should not cause recursion even with multiple error objects
+                console.error('🧪 FINAL TEST: Multiple error objects:', error1, error2, undefinedObj);
+                addResult('Multiple error objects in console', 'PASS', 'Multiple error objects handled safely');
+            } catch (e) {
+                addResult('Multiple error objects in console', 'FAIL', 'Error with multiple objects: ' + e.message);
+            }
+            
+            // Final summary
+            setTimeout(() => {
+                const passCount = results.filter(r => r.status === 'PASS').length;
+                const totalCount = results.length;
+                
+                console.log(`🧪 FINAL TEST SUMMARY: ${passCount}/${totalCount} tests passed`);
+                
+                const summaryDiv = document.createElement('div');
+                summaryDiv.innerHTML = `<h2>Test Summary: ${passCount}/${totalCount} tests passed</h2>`;
+                summaryDiv.style.color = passCount === totalCount ? 'green' : 'red';
+                summaryDiv.style.fontWeight = 'bold';
+                document.getElementById('results').appendChild(summaryDiv);
+                
+                if (passCount === totalCount) {
+                    console.log('🎉 ALL TESTS PASSED - Recursive error fix is complete!');
+                } else {
+                    console.log('❌ Some tests failed - recursive error fix needs more work');
+                }
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

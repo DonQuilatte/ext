@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,
@@ -8,8 +9,7 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   extends: [
     'eslint:recommended',
-    '@typescript-eslint/recommended',
-    '@typescript-eslint/recommended-requiring-type-checking'
+    'plugin:@typescript-eslint/recommended'
   ],
   env: {
     browser: true,
@@ -24,7 +24,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/prefer-const': 'error',
     '@typescript-eslint/no-var-requires': 'off',
     'prefer-const': 'error',
     'no-var': 'error',
@@ -37,6 +36,53 @@ module.exports = {
       env: {
         jest: true
       }
+    },
+    {
+      files: ['*.js'],
+      parser: 'espree',
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module'
+      },
+      env: {
+        node: true,
+        jest: true
+      },
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
+        'no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+      }
+    },
+    {
+      files: ['tests/**/*.js'],
+      parser: 'espree',
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'script'
+      },
+      env: {
+        jest: true,
+        node: true
+      },
+      globals: {
+        page: 'readonly',
+        browser: 'readonly',
+        context: 'readonly',
+        jestPuppeteer: 'readonly'
+      },
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
+        'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+        '@typescript-eslint/no-require-imports': 'off'
+      }
     }
+  ],
+  ignorePatterns: [
+    'node_modules/',
+    'dist/',
+    'source/',
+    '*.min.js'
   ]
 };

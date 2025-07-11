@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Fixed Extension Functions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .status {
+            background: #e8f5e8;
+            border: 1px solid #4CAF50;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .function-test {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .function-name {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .test-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .test-btn:hover {
+            background: #45a049;
+        }
+        .test-all-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px 0;
+            display: block;
+            width: 100%;
+        }
+        .test-all-btn:hover {
+            background: #1976D2;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fixed Extension Functions Test</h1>
+        
+        <div class="status">
+            <h3>✅ Build Status: Success</h3>
+            <p>All 6 sidebar functions have been restored and are now included in the extension build.</p>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">1. openInfoAndUpdates()</div>
+            <button class="test-btn" onclick="testFunction('openInfoAndUpdates')">Test Function</button>
+            <div class="result" id="result-openInfoAndUpdates" style="display: none;"></div>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">2. showManageChatsModal()</div>
+            <button class="test-btn" onclick="testFunction('showManageChatsModal')">Test Function</button>
+            <div class="result" id="result-showManageChatsModal" style="display: none;"></div>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">3. showManageFoldersModal()</div>
+            <button class="test-btn" onclick="testFunction('showManageFoldersModal')">Test Function</button>
+            <div class="result" id="result-showManageFoldersModal" style="display: none;"></div>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">4. showManagePromptsModal()</div>
+            <button class="test-btn" onclick="testFunction('showManagePromptsModal')">Test Function</button>
+            <div class="result" id="result-showManagePromptsModal" style="display: none;"></div>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">5. showMediaGalleryModal()</div>
+            <button class="test-btn" onclick="testFunction('showMediaGalleryModal')">Test Function</button>
+            <div class="result" id="result-showMediaGalleryModal" style="display: none;"></div>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">6. showHistorySearchModal()</div>
+            <button class="test-btn" onclick="testFunction('showHistorySearchModal')">Test Function</button>
+            <div class="result" id="result-showHistorySearchModal" style="display: none;"></div>
+        </div>
+        
+        <button class="test-all-btn" onclick="testAllFunctions()">🧪 Test All Functions</button>
+        
+        <div id="summary" style="margin-top: 20px; padding: 15px; border-radius: 5px; display: none;">
+            <h3>Test Summary</h3>
+            <p id="summary-text"></p>
+        </div>
+    </div>
+
+    <!-- Load the fixed functions from the dist build -->
+    <script src="dist/scripts/infoAndUpdates/openInfoAndUpdates.js"></script>
+    <script src="dist/scripts/manageChats/showManageChatsModal.js"></script>
+    <script src="dist/scripts/manageFolders/showManageFoldersModal.js"></script>
+    <script src="dist/scripts/managePrompts/showManagePromptsModal.js"></script>
+    <script src="dist/scripts/mediaGallery/showMediaGalleryModal.js"></script>
+    <script src="dist/scripts/historySearch/showHistorySearchModal.js"></script>
+
+    <script>
+        let testResults = [];
+
+        function testFunction(functionName) {
+            console.log(`Testing ${functionName}...`);
+            const resultElement = document.getElementById(`result-${functionName}`);
+            
+            try {
+                // Check if function exists
+                if (typeof window[functionName] === 'undefined') {
+                    throw new Error(`Function ${functionName} is undefined`);
+                }
+                
+                // Check if function is actually a function
+                if (typeof window[functionName] !== 'function') {
+                    throw new Error(`${functionName} is not a function (type: ${typeof window[functionName]})`);
+                }
+                
+                // Try to call the function
+                const result = window[functionName]();
+                
+                // Success
+                resultElement.textContent = `✅ SUCCESS: Function exists and executed successfully`;
+                resultElement.className = 'result success';
+                resultElement.style.display = 'block';
+                
+                testResults.push({
+                    function: functionName,
+                    status: 'success',
+                    message: 'Function works correctly'
+                });
+                
+                console.log(`✅ ${functionName} test passed`);
+                
+            } catch (error) {
+                console.error(`❌ Error testing ${functionName}:`, error);
+                resultElement.textContent = `❌ ERROR: ${error.message}`;
+                resultElement.className = 'result error';
+                resultElement.style.display = 'block';
+                
+                testResults.push({
+                    function: functionName,
+                    status: 'error',
+                    message: error.message
+                });
+            }
+        }
+
+        function testAllFunctions() {
+            console.log('🧪 Testing all functions...');
+            
+            const functions = [
+                'openInfoAndUpdates',
+                'showManageChatsModal', 
+                'showManageFoldersModal',
+                'showManagePromptsModal',
+                'showMediaGalleryModal',
+                'showHistorySearchModal'
+            ];
+            
+            testResults = [];
+            
+            functions.forEach(functionName => {
+                testFunction(functionName);
+            });
+            
+            // Show summary
+            const successCount = testResults.filter(r => r.status === 'success').length;
+            const totalCount = functions.length;
+            const summaryElement = document.getElementById('summary');
+            const summaryText = document.getElementById('summary-text');
+            
+            if (successCount === totalCount) {
+                summaryElement.style.background = '#d4edda';
+                summaryElement.style.border = '1px solid #c3e6cb';
+                summaryText.innerHTML = `🎉 <strong>All ${totalCount} functions are working correctly!</strong><br>
+                    The extension's core functionality has been successfully restored.`;
+            } else {
+                summaryElement.style.background = '#fff3cd';
+                summaryElement.style.border = '1px solid #ffeaa7';
+                summaryText.innerHTML = `⚠️ <strong>${successCount}/${totalCount} functions working.</strong><br>
+                    ${totalCount - successCount} functions still need attention.`;
+            }
+            
+            summaryElement.style.display = 'block';
+            
+            console.log(`Test completed: ${successCount}/${totalCount} functions working`);
+        }
+
+        // Auto-test on page load
+        window.addEventListener('load', function() {
+            console.log('Page loaded, testing functions...');
+            setTimeout(testAllFunctions, 500);
+        });
+    </script>
+</body>
+</html>

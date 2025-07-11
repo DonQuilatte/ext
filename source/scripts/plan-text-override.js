@@ -8,11 +8,17 @@
     
     // Configuration
     const PLAN_REPLACEMENTS = {
-        'Toolbox Plan - Free': 'Toolbox Plan - Premium',
-        'Free Plan': 'Premium Plan',
-        'Free': 'Premium',
-        'toolbox-plan-free': 'toolbox-plan-premium',
-        'plan-free': 'plan-premium'
+        'Toolbox Plan - Free': 'ChatGPT Connection: Connected',
+        'Toolbox Plan - Premium': 'ChatGPT Connection: Connected',
+        'Toolbox Plan': 'ChatGPT Connection: Connected',
+        'Free Plan': 'ChatGPT Connection: Connected',
+        'Premium Plan': 'ChatGPT Connection: Connected',
+        'Free': 'Connected',
+        'Premium': 'Connected',
+        'toolbox-plan-free': 'chatgpt-connection-connected',
+        'toolbox-plan-premium': 'chatgpt-connection-connected',
+        'plan-free': 'connection-connected',
+        'plan-premium': 'connection-connected'
     };
     
     // Function to replace text content

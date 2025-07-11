@@ -13,7 +13,7 @@
         searchDepth: 10 // DOM traversal depth
     };
     
-    // Storage keys to monitor
+    // Storage keys to monitor (only check keys that are likely to exist)
     const STORAGE_KEYS_TO_MONITOR = [
         'DEV_MODE_PREMIUM',
         'MOCK_PREMIUM',
@@ -21,10 +21,17 @@
         'userPlan',
         'subscriptionStatus',
         'planType',
-        '-r.6es£Jr1U0', // The key we discovered
+        'isResetChatHistory',
+        'local_user_data',
+        'store'
+    ];
+    
+    // Optional storage keys to check (won't show errors if missing)
+    const OPTIONAL_STORAGE_KEYS = [
         'premium',
         'subscription',
-        'plan'
+        'plan',
+        '-r.6es£Jr1U0' // This appears to be a random/encoded key
     ];
     
     // Text patterns to search for
@@ -227,6 +234,8 @@
         const storageData = await getAllStorageData();
         
         console.log('Local Storage:');
+        
+        // Check required storage keys
         STORAGE_KEYS_TO_MONITOR.forEach(key => {
             if (storageData.local.hasOwnProperty(key)) {
                 console.log(`  ✅ ${key}:`, storageData.local[key]);
@@ -235,12 +244,58 @@
             }
         });
         
+        // Check optional storage keys (only show if found)
+        console.log('Optional Storage Keys:');
+        OPTIONAL_STORAGE_KEYS.forEach(key => {
+            if (storageData.local.hasOwnProperty(key)) {
+                console.log(`  ✅ ${key}:`, storageData.local[key]);
+            } else {
+                console.log(`  ℹ️ ${key}: Not present (optional)`);
+            }
+        });
+        
         console.log('Sync Storage:');
+        let syncKeysFound = false;
+        
         STORAGE_KEYS_TO_MONITOR.forEach(key => {
             if (storageData.sync.hasOwnProperty(key)) {
                 console.log(`  ✅ ${key}:`, storageData.sync[key]);
+                syncKeysFound = true;
             }
         });
+        
+        OPTIONAL_STORAGE_KEYS.forEach(key => {
+            if (storageData.sync.hasOwnProperty(key)) {
+                console.log(`  ✅ ${key}:`, storageData.sync[key]);
+                syncKeysFound = true;
+            }
+        });
+        
+        if (!syncKeysFound) {
+            console.log('  ℹ️ No relevant keys found in sync storage');
+        }
+        
+        // Show all available storage keys for debugging
+        console.log('All Available Storage Keys:');
+        const allLocalKeys = Object.keys(storageData.local);
+        if (allLocalKeys.length > 0) {
+            console.log('  Local keys:', allLocalKeys.slice(0, 10)); // Show first 10 keys
+            if (allLocalKeys.length > 10) {
+                console.log(`  ... and ${allLocalKeys.length - 10} more keys`);
+            }
+        } else {
+            console.log('  ℹ️ No local storage keys found');
+        }
+        
+        const allSyncKeys = Object.keys(storageData.sync);
+        if (allSyncKeys.length > 0) {
+            console.log('  Sync keys:', allSyncKeys.slice(0, 10)); // Show first 10 keys
+            if (allSyncKeys.length > 10) {
+                console.log(`  ... and ${allSyncKeys.length - 10} more keys`);
+            }
+        } else {
+            console.log('  ℹ️ No sync storage keys found');
+        }
         
         // 2. DOM Analysis
         console.log('🏗️ DOM Analysis:');

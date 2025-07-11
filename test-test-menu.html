@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Menu Modal - Function Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        
+        .status.success { color: #4CAF50; }
+        .status.error { color: #f44336; }
+        .status.warning { color: #ff9800; }
+        
+        .function-test {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+        
+        .function-name {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .info-box {
+            background: rgba(33, 150, 243, 0.2);
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .success-box {
+            background: rgba(76, 175, 80, 0.2);
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box {
+            background: rgba(255, 152, 0, 0.2);
+            border-left: 4px solid #FF9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .chat-simulator {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .mock-chat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .mock-chat:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Menu Modal</h1>
+        <p class="subtitle">Function Test for Chat Retrieval Functionality</p>
+        
+        <div class="info-box">
+            <h3>ℹ️ About This Test</h3>
+            <p>This page tests the new <strong>showTestMenuModal()</strong> function that retrieves and displays all chats from a ChatGPT page. The function demonstrates:</p>
+            <ul>
+                <li>🔍 Multiple DOM selector strategies for finding chat elements</li>
+                <li>📝 Chat data extraction and formatting</li>
+                <li>💾 Export functionality (JSON download)</li>
+                <li>📋 Console logging capabilities</li>
+                <li>🔄 Real-time refresh functionality</li>
+            </ul>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔧 Function Tests</h3>
+            
+            <div class="function-test">
+                <div>
+                    <div class="function-name">showTestMenuModal()</div>
+                    <small>Test Menu Modal with Chat Retrieval</small>
+                </div>
+                <div>
+                    <button class="test-button" onclick="testFunction('showTestMenuModal')">Test Function</button>
+                    <span class="status" id="status-showTestMenuModal"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📋 Mock Chat Data Simulator</h3>
+            <p>To better test the chat retrieval function, here are some mock chat elements:</p>
+            
+            <div class="chat-simulator">
+                <div class="mock-chat" data-testid="conversation-item">
+                    <h4 data-testid="conversation-title">JavaScript Debugging Tips</h4>
+                    <p>A conversation about debugging JavaScript applications...</p>
+                </div>
+                <div class="mock-chat" data-testid="conversation-item">
+                    <h4 data-testid="conversation-title">Python Data Analysis</h4>
+                    <p>Discussion about pandas and data manipulation techniques...</p>
+                </div>
+                <div class="mock-chat" data-testid="conversation-item">
+                    <h4 data-testid="conversation-title">React Best Practices</h4>
+                    <p>Exploring modern React patterns and performance optimization...</p>
+                </div>
+                <div class="mock-chat" data-testid="conversation-item">
+                    <h4 data-testid="conversation-title">Database Design</h4>
+                    <p>Principles of good database schema design and normalization...</p>
+                </div>
+                <div class="mock-chat" data-testid="conversation-item">
+                    <h4 data-testid="conversation-title">Machine Learning Basics</h4>
+                    <p>Introduction to machine learning algorithms and concepts...</p>
+                </div>
+            </div>
+            
+            <div class="success-box">
+                <strong>✅ Mock Data Available</strong><br>
+                The Test Menu function should detect and display these 5 mock conversation items when you click "Test Function" above.
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🎯 Expected Results</h3>
+            <div class="warning-box">
+                <h4>What You Should See:</h4>
+                <ul>
+                    <li>✅ A modal window opens with "🧪 Test Menu - Chat List" title</li>
+                    <li>📊 Results summary showing "Total Chats Found: 5"</li>
+                    <li>📝 List of 5 mock conversations with titles and details</li>
+                    <li>🔧 Three action buttons: Refresh, Export, and Log</li>
+                    <li>🔄 Refresh button recreates the modal with updated data</li>
+                    <li>💾 Export button downloads a JSON file with chat data</li>
+                    <li>📋 Log button outputs chat data to browser console</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Verification Steps</h3>
+            <ol>
+                <li><strong>Click "Test Function"</strong> - The modal should open immediately</li>
+                <li><strong>Check the Results Summary</strong> - Should show 5 chats found</li>
+                <li><strong>Verify Chat List</strong> - Should display the 5 mock chats above</li>
+                <li><strong>Test Export</strong> - Click "💾 Export to JSON" to download chat data</li>
+                <li><strong>Test Console Log</strong> - Click "📋 Log to Console" and check browser console</li>
+                <li><strong>Test Refresh</strong> - Click "🔄 Refresh Chat List" to reload the modal</li>
+                <li><strong>Close Modal</strong> - Use X button, Close button, or Escape key</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Load the test menu modal function -->
+    <script src="dist/scripts/testMenu/showTestMenuModal.js"></script>
+    
+    <script>
+        // Test functions array
+        const functions = [
+            'showTestMenuModal'
+        ];
+        
+        // Function to test if a function exists and works
+        function testFunction(functionName) {
+            const statusElement = document.getElementById(`status-${functionName}`);
+            
+            try {
+                // Check if function exists
+                if (typeof window[functionName] !== 'function') {
+                    statusElement.textContent = '❌ Function not found';
+                    statusElement.className = 'status error';
+                    console.error(`Function ${functionName} is not defined`);
+                    return;
+                }
+                
+                // Try to call the function
+                window[functionName]();
+                statusElement.textContent = '✅ Success';
+                statusElement.className = 'status success';
+                console.log(`Successfully called ${functionName}()`);
+                
+            } catch (error) {
+                statusElement.textContent = '❌ Error';
+                statusElement.className = 'status error';
+                console.error(`Error calling ${functionName}():`, error);
+            }
+        }
+        
+        // Auto-test functions on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🧪 Test Menu Modal - Page loaded');
+            
+            // Check function availability
+            functions.forEach(funcName => {
+                const statusElement = document.getElementById(`status-${funcName}`);
+                if (typeof window[funcName] === 'function') {
+                    statusElement.textContent = '✅ Available';
+                    statusElement.className = 'status success';
+                    console.log(`✅ ${funcName} is available`);
+                } else {
+                    statusElement.textContent = '⚠️ Not loaded';
+                    statusElement.className = 'status warning';
+                    console.warn(`⚠️ ${funcName} is not available`);
+                }
+            });
+            
+            console.log('🔧 Test Menu Functions Status:');
+            console.log('showTestMenuModal available:', typeof window.showTestMenuModal);
+            console.log('Total mock chat elements:', document.querySelectorAll('[data-testid="conversation-item"]').length);
+        });
+    </script>
+</body>
+</html>

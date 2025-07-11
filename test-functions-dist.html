@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Functions from Dist</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border: 1px solid #ddd; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .info { background: #d1ecf1; border-color: #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>Test Modal Functions from Dist Folder</h1>
+    <div id="results"></div>
+
+    <!-- Load scripts from dist folder -->
+    <script src="dist/scripts/infoAndUpdates/openInfoAndUpdates.js"></script>
+    <script src="dist/scripts/manageChats/showManageChatsModal.js"></script>
+    <script src="dist/scripts/manageFolders/showManageFoldersModal.js"></script>
+    <script src="dist/scripts/managePrompts/showManagePromptsModal.js"></script>
+    <script src="dist/scripts/mediaGallery/showMediaGalleryModal.js"></script>
+    <script src="dist/scripts/historySearch/showHistorySearchModal.js"></script>
+
+    <script>
+        function addResult(message, type) {
+            const resultsDiv = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            resultsDiv.appendChild(div);
+            console.log(message);
+        }
+
+        // Wait for scripts to load
+        window.addEventListener('load', function() {
+            addResult('Testing modal functions from dist folder...', 'info');
+            
+            const functions = [
+                'openInfoAndUpdates',
+                'showManageChatsModal',
+                'showManageFoldersModal',
+                'showManagePromptsModal',
+                'showMediaGalleryModal',
+                'showHistorySearchModal'
+            ];
+            
+            functions.forEach(funcName => {
+                const status = typeof window[funcName];
+                if (status === 'function') {
+                    addResult(`✅ ${funcName}: AVAILABLE`, 'success');
+                    
+                    // Try to execute the function
+                    try {
+                        const result = window[funcName]();
+                        addResult(`   Execution result: ${result === undefined ? 'undefined (normal)' : result}`, 'success');
+                    } catch (e) {
+                        addResult(`   ❌ Execution error: ${e.message}`, 'error');
+                    }
+                } else {
+                    addResult(`❌ ${funcName}: ${status}`, 'error');
+                }
+            });
+            
+            // Test button to trigger functions
+            const testButton = document.createElement('button');
+            testButton.textContent = 'Test All Functions';
+            testButton.style.cssText = 'margin: 20px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;';
+            testButton.onclick = function() {
+                functions.forEach(funcName => {
+                    if (typeof window[funcName] === 'function') {
+                        try {
+                            window[funcName]();
+                            addResult(`✅ ${funcName}: Executed successfully`, 'success');
+                        } catch (e) {
+                            addResult(`❌ ${funcName}: Error - ${e.message}`, 'error');
+                        }
+                    }
+                });
+            };
+            document.body.appendChild(testButton);
+        });
+    </script>
+</body>
+</html>

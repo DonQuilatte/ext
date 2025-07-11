@@ -1,0 +1,313 @@
+{
+  "testSuite": "Chrome Extension Lifecycle Test",
+  "timestamp": "2025-07-11T17:09:40.886Z",
+  "testDuration": 8511,
+  "extensionId": null,
+  "testResults": {
+    "uninstallReinstall": "FAILED",
+    "chatgptLoad": "SUCCESS",
+    "validation": {
+      "premiumErrors": {
+        "status": "PASS",
+        "count": 0,
+        "messages": []
+      },
+      "jsErrors": {
+        "status": "FAIL",
+        "count": 1,
+        "messages": [
+          {
+            "type": "error",
+            "text": "Failed to load resource: the server responded with a status of 403 ()",
+            "timestamp": "2025-07-11T17:09:34.550Z",
+            "location": {
+              "url": "https://chatgpt.com/backend-api/edge"
+            }
+          }
+        ]
+      },
+      "uiElements": {
+        "status": "FAIL",
+        "elements": {
+          "toolboxButton": false,
+          "manageFolders": false,
+          "managePrompts": true,
+          "premiumBadges": false,
+          "extensionPopup": false,
+          "chatInput": true,
+          "sidebar": false,
+          "extensionElementsCount": 0
+        }
+      },
+      "manifest": {
+        "status": "FAIL",
+        "issues": [
+          "Premium-related content found in manifest"
+        ],
+        "version": "3.9.6"
+      }
+    }
+  },
+  "consoleMessages": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 ()",
+      "timestamp": "2025-07-11T17:09:34.550Z",
+      "location": {
+        "url": "https://chatgpt.com/backend-api/edge"
+      }
+    }
+  ],
+  "errors": [
+    {
+      "test": "uninstallExtension",
+      "message": "Error in invocation of management.setEnabled(string id, boolean enabled, optional function callback): No matching signature.",
+      "timestamp": "2025-07-11T17:09:33.220Z"
+    }
+  ],
+  "screenshots": [
+    "/Users/jederlichman/Desktop/script/screenshots/chatgpt-loaded.png"
+  ],
+  "summary": {
+    "totalTests": 3,
+    "passed": 1,
+    "failed": 1,
+    "criticalErrors": 1,
+    "premiumRelatedIssues": 0,
+    "jsErrors": 1,
+    "healthScore": 33
+  },
+  "recommendations": [
+    {
+      "severity": "CRITICAL",
+      "message": "1 critical errors detected - review console logs and fix immediately"
+    },
+    {
+      "severity": "HIGH",
+      "message": "No extension UI elements detected - extension may not be injecting properly"
+    }
+  ],
+  "extensionAnalysis": {
+    "manifestAnalysis": {
+      "version": "3.9.6",
+      "permissions": [
+        "storage",
+        "webRequest",
+        "activeTab"
+      ],
+      "contentScripts": [
+        {
+          "matches": [
+            "https://chatgpt.com/*"
+          ],
+          "js": [
+            "scripts/robust-initialization.js",
+            "scripts/content-error-handler.js",
+            "scripts/debug-diagnostics.js",
+            "scripts/targeted-fix.js",
+            "scripts/safe-storage-wrapper.js",
+            "scripts/debug-test.js",
+            "scripts/duplicate-id-fix.js",
+            "scripts/remove-premium-gates.js",
+            "scripts/property-interceptor.js",
+            "scripts/early-init.js",
+            "scripts/unified-context-fix.js",
+            "scripts/health-check.js",
+            "api/local-only-backend.js",
+            "scripts/debug-console.js",
+            "api/localBackend.js",
+            "scripts/devmode.js",
+            "html/devSettings.js",
+            "scripts/content-fix.js",
+            "scripts/content.js",
+            "scripts/verify-offline.js",
+            "scripts/plan-text-override.js",
+            "scripts/plan-debug.js",
+            "scripts/extension-details-toggle.js",
+            "scripts/real-api-bridge.js",
+            "scripts/free-extension-summary.js",
+            "scripts/global-modal-injector.js",
+            "scripts/manageChats/showManageChatsModal.js",
+            "scripts/manageFolders/showManageFoldersModal.js",
+            "scripts/managePrompts/showManagePromptsModal.js",
+            "scripts/mediaGallery/showMediaGalleryModal.js"
+          ],
+          "css": [
+            "styles/styles.css",
+            "styles/modal.css",
+            "styles/snackbar.css",
+            "styles/loader.css",
+            "styles/form.css",
+            "styles/variables.css",
+            "styles/switch.css",
+            "styles/prompts.css",
+            "styles/pinnedChats.css",
+            "styles/gptsCollapse.css",
+            "styles/moveChat.css",
+            "styles/searchHistory.css",
+            "styles/voiceDownload.css",
+            "styles/mediaGallery.css",
+            "styles/direction.css",
+            "styles/featuresCollapse.css",
+            "styles/addGPTs.css",
+            "styles/promptLibrary.css",
+            "styles/promptValues.css",
+            "styles/chainValues.css",
+            "styles/dnd.css",
+            "styles/infoAndUpdates.css"
+          ],
+          "run_at": "document_start"
+        }
+      ],
+      "background": {
+        "service_worker": "scripts/background.js"
+      }
+    },
+    "scriptFiles": [
+      {
+        "file": "run-e2e-tests.js",
+        "size": 12310,
+        "lineCount": 324
+      },
+      {
+        "file": "popup.js",
+        "size": 5672,
+        "lineCount": 176
+      },
+      {
+        "file": "manage.js",
+        "size": 40334,
+        "lineCount": 1038
+      },
+      {
+        "file": "diagnostic-logging.js",
+        "size": 8704,
+        "lineCount": 231
+      },
+      {
+        "file": "debug-init.js",
+        "size": 397,
+        "lineCount": 13
+      },
+      {
+        "file": "utils/helpers/unixToDate.js",
+        "size": 1652,
+        "lineCount": 1
+      },
+      {
+        "file": "utils/helpers/toggleLoader.js",
+        "size": 602,
+        "lineCount": 1
+      },
+      {
+        "file": "utils/helpers/toggleInputError.js",
+        "size": 23,
+        "lineCount": 1
+      },
+      {
+        "file": "utils/helpers/showSnackbar.js",
+        "size": 5185,
+        "lineCount": 1
+      },
+      {
+        "file": "utils/helpers/showPremiumRequiredModal.js",
+        "size": 552,
+        "lineCount": 15
+      },
+      {
+        "file": "utils/helpers/resetForm.js",
+        "size": 568,
+        "lineCount": 1
+      },
+      {
+        "file": "utils/helpers/replaceDynamicValues.js",
+        "size": 23,
+        "lineCount": 1
+      },
+      {
+        "file": "utils/helpers/removeLastParentheses.js",
+        "size": 23,
+        "lineCount": 1
+      },
+      {
+        "file": "utils/helpers/prompts.js",
+        "size": 1212,
+        "lineCount": 42
+      },
+      {
+        "file": "utils/helpers/manageEventListeners.js",
+        "size": 49,
+        "lineCount": 1
+      },
+      {
+        "file": "utils/helpers/isAncestorOrSelf.js",
+        "size": 23,
+        "lineCount": 1
+      },
+      {
+        "file": "utils/helpers/handleModalBackButtonClick.js",
+        "size": 1009,
+        "lineCount": 31
+      },
+      {
+        "file": "utils/helpers/getTotalMessages.js",
+        "size": 552,
+        "lineCount": 1
+      },
+      {
+        "file": "utils/helpers/getModalProps.js",
+        "size": 1027,
+        "lineCount": 35
+      },
+      {
+        "file": "utils/helpers/getModalLogic.js",
+        "size": 960,
+        "lineCount": 35
+      }
+    ],
+    "suspiciousPatterns": [
+      {
+        "file": "run-e2e-tests.js",
+        "matches": [
+          "Premium",
+          "premium"
+        ]
+      },
+      {
+        "file": "utils/helpers/showPremiumRequiredModal.js",
+        "matches": [
+          "Premium",
+          "premium"
+        ]
+      },
+      {
+        "file": "utils/helpers/prompts.js",
+        "matches": [
+          "Premium",
+          "premium"
+        ]
+      },
+      {
+        "file": "utils/helpers/handleModalBackButtonClick.js",
+        "matches": [
+          "Premium",
+          "premium"
+        ]
+      },
+      {
+        "file": "utils/helpers/getModalProps.js",
+        "matches": [
+          "Premium",
+          "premium"
+        ]
+      },
+      {
+        "file": "utils/helpers/getModalLogic.js",
+        "matches": [
+          "Premium",
+          "premium"
+        ]
+      }
+    ]
+  }
+}

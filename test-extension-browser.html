@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extension JavaScript Error Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        #console-output {
+            background: #000;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Chrome Extension JavaScript Error Test</h1>
+    <p>This page tests the extension scripts to verify that JavaScript errors have been resolved.</p>
+
+    <div class="test-section">
+        <h2>📋 Test Results</h2>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🖥️ Console Output</h2>
+        <button onclick="clearConsole()">Clear Console</button>
+        <button onclick="runTests()">Run Tests</button>
+        <div id="console-output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Property Tests</h2>
+        <button onclick="testPropertyAccess()">Test Property Access</button>
+        <button onclick="testPromiseRejection()">Test Promise Rejection</button>
+        <button onclick="testUndefinedAccess()">Test Undefined Access</button>
+        <div id="property-results"></div>
+    </div>
+
+    <!-- Test elements with duplicate IDs to verify duplicate ID fix -->
+    <div style="display: none;">
+        <input type="checkbox" id="temporary-chat-checkbox" />
+        <input type="checkbox" id="temporary-chat-checkbox" />
+        <svg id="infi-chevron-icon"></svg>
+        <svg id="infi-chevron-icon"></svg>
+        <svg id="infi-chevron-icon"></svg>
+        <svg id="infi-chevron-icon"></svg>
+        <svg id="infi-info-icon"></svg>
+        <svg id="infi-info-icon"></svg>
+        <svg id="infi-info-icon"></svg>
+        <svg id="infi-search-icon"></svg>
+        <svg id="infi-search-icon"></svg>
+        <svg id="infi-search-icon"></svg>
+        <svg id="infi-folders-icon"></svg>
+        <svg id="infi-folders-icon"></svg>
+        <svg id="infi-folders-icon"></svg>
+        <svg id="infi-prompt-icon"></svg>
+        <svg id="infi-prompt-icon"></svg>
+        <svg id="infi-prompt-icon"></svg>
+        <svg id="infi-gallery-icon"></svg>
+        <svg id="infi-gallery-icon"></svg>
+        <svg id="infi-gallery-icon"></svg>
+        <svg id="infi-ltr-icon"></svg>
+        <svg id="infi-ltr-icon"></svg>
+        <svg id="infi-ltr-icon"></svg>
+    </div>
+
+    <!-- Load extension scripts in the correct order -->
+    <script src="source/scripts/robust-initialization.js"></script>
+    <script src="source/scripts/content-fix.js"></script>
+    <script src="source/scripts/duplicate-id-fix.js"></script>
+    <script src="source/scripts/unified-context-fix.js"></script>
+    <script src="source/scripts/verify-offline.js"></script>
+
+    <script>
+        // Capture console output
+        const originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn,
+            info: console.info
+        };
+
+        const consoleOutput = document.getElementById('console-output');
+        const testResults = document.getElementById('test-results');
+        const propertyResults = document.getElementById('property-results');
+
+        function addToConsole(type, ...args) {
+            const timestamp = new Date().toLocaleTimeString();
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            
+            consoleOutput.textContent += `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            
+            // Call original console method
+            originalConsole[type](...args);
+        }
+
+        // Override console methods
+        console.log = (...args) => addToConsole('log', ...args);
+        console.error = (...args) => addToConsole('error', ...args);
+        console.warn = (...args) => addToConsole('warn', ...args);
+        console.info = (...args) => addToConsole('info', ...args);
+
+        function clearConsole() {
+            consoleOutput.textContent = '';
+        }
+
+        function addTestResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            testResults.appendChild(div);
+        }
+
+        function addPropertyResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            propertyResults.appendChild(div);
+        }
+
+        function runTests() {
+            testResults.innerHTML = '';
+            console.log('🧪 Starting extension script tests...');
+
+            // Test 1: Check if critical properties exist
+            const criticalProps = ['isResetChatHistory', 'local_folders', 'DEV_MODE_CONFIG', 'MOCK_BACKEND'];
+            criticalProps.forEach(prop => {
+                if (window.hasOwnProperty(prop)) {
+                    addTestResult(`✅ Property ${prop} exists: ${typeof window[prop]}`, 'success');
+                } else {
+                    addTestResult(`❌ Property ${prop} missing`, 'error');
+                }
+            });
+
+            // Test 2: Check utility functions
+            const utilityFunctions = ['safeGetProperty', 'safeHasProperty', 'domUtils', 'storageUtils'];
+            utilityFunctions.forEach(func => {
+                if (window[func]) {
+                    addTestResult(`✅ Utility ${func} available: ${typeof window[func]}`, 'success');
+                } else {
+                    addTestResult(`❌ Utility ${func} missing`, 'error');
+                }
+            });
+
+            // Test 3: Check DOM utils functionality
+            if (window.domUtils) {
+                try {
+                    const isReady = window.domUtils.isReady();
+                    const isBodyReady = window.domUtils.isBodyReady();
+                    addTestResult(`✅ DOM ready: ${isReady}, Body ready: ${isBodyReady}`, 'success');
+                } catch (error) {
+                    addTestResult(`❌ DOM utils error: ${error.message}`, 'error');
+                }
+            }
+
+            // Test 4: Check configuration objects
+            if (window.DEV_MODE_CONFIG) {
+                addTestResult(`✅ DEV_MODE_CONFIG loaded with ${Object.keys(window.DEV_MODE_CONFIG).length} properties`, 'success');
+            }
+
+            if (window.MOCK_BACKEND) {
+                addTestResult(`✅ MOCK_BACKEND loaded with shouldMock function: ${typeof window.MOCK_BACKEND.shouldMock}`, 'success');
+            }
+
+            console.log('✅ Extension script tests completed');
+        }
+
+        function testPropertyAccess() {
+            propertyResults.innerHTML = '';
+            console.log('🔍 Testing property access patterns...');
+
+            // Test safe property access
+            try {
+                const result = window.safeGetProperty(null, 'isResetChatHistory', false);
+                addPropertyResult(`✅ Safe property access on null: ${result}`, 'success');
+            } catch (error) {
+                addPropertyResult(`❌ Safe property access failed: ${error.message}`, 'error');
+            }
+
+            // Test undefined object access
+            try {
+                const undefinedObj = undefined;
+                const result = window.safeGetProperty(undefinedObj, 'isResetChatHistory', 'fallback');
+                addPropertyResult(`✅ Safe access on undefined: ${result}`, 'success');
+            } catch (error) {
+                addPropertyResult(`❌ Undefined access failed: ${error.message}`, 'error');
+            }
+
+            // Test property existence check
+            try {
+                const hasProperty = window.safeHasProperty(window, 'isResetChatHistory');
+                addPropertyResult(`✅ Property existence check: ${hasProperty}`, 'success');
+            } catch (error) {
+                addPropertyResult(`❌ Property check failed: ${error.message}`, 'error');
+            }
+        }
+
+        function testPromiseRejection() {
+            console.log('🔍 Testing Promise rejection handling...');
+
+            // Test Promise rejection with isResetChatHistory error
+            const testPromise = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject(new Error('Cannot read properties of undefined (reading \'isResetChatHistory\')'));
+                }, 100);
+            });
+
+            testPromise.then(
+                result => {
+                    addPropertyResult(`✅ Promise resolved: ${result}`, 'success');
+                },
+                error => {
+                    addPropertyResult(`🔧 Promise rejection handled: ${error.message}`, 'warning');
+                }
+            ).catch(error => {
+                addPropertyResult(`✅ Promise catch handled: ${error.message}`, 'success');
+            });
+        }
+
+        function testUndefinedAccess() {
+            console.log('🔍 Testing undefined property access...');
+
+            try {
+                // This should trigger our error handling
+                const undefinedObj = undefined;
+                const result = undefinedObj.isResetChatHistory;
+                addPropertyResult(`❌ Undefined access should have been caught: ${result}`, 'error');
+            } catch (error) {
+                addPropertyResult(`✅ Undefined access caught: ${error.message}`, 'success');
+            }
+
+            // Test with our safe accessor
+            try {
+                const result = window.safeGetProperty(undefined, 'isResetChatHistory', false);
+                addPropertyResult(`✅ Safe undefined access: ${result}`, 'success');
+            } catch (error) {
+                addPropertyResult(`❌ Safe access failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Run initial tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                console.log('🚀 Page loaded, running initial tests...');
+                runTests();
+            }, 1000);
+        });
+
+        // Monitor for any unhandled errors
+        window.addEventListener('error', (event) => {
+            console.error('🚨 Unhandled error detected:', event.error);
+            addTestResult(`🚨 Unhandled error: ${event.message} at ${event.filename}:${event.lineno}`, 'error');
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('🚨 Unhandled promise rejection:', event.reason);
+            addTestResult(`🚨 Unhandled rejection: ${event.reason}`, 'error');
+        });
+    </script>
+</body>
+</html>

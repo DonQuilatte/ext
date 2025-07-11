@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursive Error Test - isResetChatHistory</title>
+</head>
+<body>
+    <h1>Recursive Error Test</h1>
+    <div id="output"></div>
+    <button onclick="testRecursiveError()">Test Recursive Error</button>
+    <button onclick="testWithFix()">Test With Fix</button>
+
+    <script>
+        // Store original console methods
+        const originalConsoleError = console.error;
+        const originalConsoleLog = console.log;
+        
+        // Output function for testing
+        function output(message) {
+            const div = document.getElementById('output');
+            div.innerHTML += '<p>' + message + '</p>';
+            originalConsoleLog(message);
+        }
+        
+        // REPRODUCE THE EXACT ERROR SCENARIO
+        function testRecursiveError() {
+            output('🧪 Testing recursive error scenario...');
+            
+            // Clear output
+            document.getElementById('output').innerHTML = '';
+            
+            // Override console.error with the PROBLEMATIC version (like in unified-context-fix.js)
+            console.error = function(...args) {
+                try {
+                    // This is the problematic argument processing from unified-context-fix.js
+                    const message = args.map(arg => {
+                        try {
+                            if (typeof arg === 'string') return arg;
+                            if (arg && typeof arg.toString === 'function') return arg.toString(); // ⚠️ PROBLEM HERE
+                            return String(arg); // ⚠️ AND HERE
+                        } catch (argError) {
+                            return '[object]';
+                        }
+                    }).join(' ');
+                    
+                    // Filter logic
+                    if (message.includes('Extension context invalidated') ||
+                        message.includes('CORS policy') ||
+                        message.includes('blocked by CORS') ||
+                        message.includes('Maximum call stack') ||
+                        message.includes('RangeError') ||
+                        message.includes('Illegal invocation')) {
+                        return;
+                    }
+                    
+                    // This is where the recursive error happens
+                    try {
+                        return originalConsoleError.apply(console, args); // ⚠️ MAIN PROBLEM HERE
+                    } catch (applyError) {
+                        return originalConsoleError(message);
+                    }
+                } catch (e) {
+                    return;
+                }
+            };
+            
+            // Create the problematic object that causes the recursive error
+            const problematicObject = {};
+            
+            // This simulates the exact scenario where accessing toString triggers isResetChatHistory access
+            Object.defineProperty(problematicObject, 'toString', {
+                get: function() {
+                    output('🚨 toString called - this will trigger the recursive error');
+                    // This simulates accessing isResetChatHistory on an undefined object
+                    const undefinedObject = undefined;
+                    return undefinedObject.isResetChatHistory; // This will throw TypeError
+                }
+            });
+            
+            try {
+                output('📝 About to call console.error with problematic object...');
+                console.error('🚨 CONTENT FIX: Caught Promise rejection isResetChatHistory error:', problematicObject);
+                output('✅ No recursive error occurred (unexpected)');
+            } catch (error) {
+                output('🚨 Caught error: ' + error.message);
+                output('🔄 This demonstrates the recursive error scenario');
+            }
+        }
+        
+        // TEST WITH THE BULLETPROOF FIX
+        function testWithFix() {
+            output('🛡️ Testing with bulletproof fix...');
+            
+            // Clear output
+            document.getElementById('output').innerHTML = '';
+            
+            // BULLETPROOF console.error override
+            console.error = function(...args) {
+                try {
+                    // ULTRA-SAFE argument processing - never access properties that could throw
+                    const safeArgs = [];
+                    for (let i = 0; i < args.length; i++) {
+                        try {
+                            const arg = args[i];
+                            if (arg === null) {
+                                safeArgs.push('null');
+                            } else if (arg === undefined) {
+                                safeArgs.push('undefined');
+                            } else if (typeof arg === 'string') {
+                                safeArgs.push(arg);
+                            } else if (typeof arg === 'number' || typeof arg === 'boolean') {
+                                safeArgs.push(String(arg));
+                            } else {
+                                // For objects, use a safe representation that doesn't trigger property access
+                                safeArgs.push('[object Object]');
+                            }
+                        } catch (argError) {
+                            safeArgs.push('[error processing argument]');
+                        }
+                    }
+                    
+                    // Create a safe message without triggering property access
+                    const message = safeArgs.join(' ');
+                    
+                    // Filter logic using the safe message
+                    if (message.includes('Extension context invalidated') ||
+                        message.includes('CORS policy') ||
+                        message.includes('blocked by CORS') ||
+                        message.includes('Maximum call stack') ||
+                        message.includes('RangeError') ||
+                        message.includes('Illegal invocation')) {
+                        return;
+                    }
+                    
+                    // SAFE call to original error - use safe message only, never pass original args
+                    try {
+                        return originalConsoleError.call(console, message);
+                    } catch (applyError) {
+                        // Ultimate fallback - do nothing
+                        return;
+                    }
+                } catch (e) {
+                    // Ultimate fallback - do nothing to prevent recursion
+                    return;
+                }
+            };
+            
+            // Create the same problematic object
+            const problematicObject = {};
+            Object.defineProperty(problematicObject, 'toString', {
+                get: function() {
+                    output('🚨 toString called - but this should be safe now');
+                    const undefinedObject = undefined;
+                    return undefinedObject.isResetChatHistory; // This will throw TypeError
+                }
+            });
+            
+            try {
+                output('📝 About to call console.error with problematic object (with fix)...');
+                console.error('🚨 CONTENT FIX: Caught Promise rejection isResetChatHistory error:', problematicObject);
+                output('✅ No recursive error occurred - fix is working!');
+            } catch (error) {
+                output('🚨 Unexpected error: ' + error.message);
+            }
+        }
+        
+        // Also test Reflect.get interception
+        function testReflectInterception() {
+            output('🔍 Testing Reflect.get interception...');
+            
+            // Store original Reflect.get
+            const originalReflectGet = Reflect.get;
+            
+            // Override Reflect.get to intercept undefined object access
+            Reflect.get = function(target, property, receiver) {
+                try {
+                    if ((target === undefined || target === null) && property === 'isResetChatHistory') {
+                        output('🔧 REFLECT: Intercepted isResetChatHistory access on undefined object');
+                        return false;
+                    }
+                    return originalReflectGet.call(this, target, property, receiver);
+                } catch (error) {
+                    if (property === 'isResetChatHistory') {
+                        output('🔧 REFLECT: Error accessing isResetChatHistory, returning fallback');
+                        return false;
+                    }
+                    throw error;
+                }
+            };
+            
+            // Test the interception
+            try {
+                const undefinedObject = undefined;
+                const result = Reflect.get(undefinedObject, 'isResetChatHistory');
+                output('✅ Reflect.get interception working: ' + result);
+            } catch (error) {
+                output('🚨 Reflect.get interception failed: ' + error.message);
+            }
+        }
+        
+        // Run Reflect test on load
+        window.addEventListener('load', function() {
+            output('🚀 Page loaded - ready for testing');
+            testReflectInterception();
+        });
+    </script>
+</body>
+</html>

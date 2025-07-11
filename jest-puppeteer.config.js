@@ -1,23 +1,30 @@
 module.exports = {
   launch: {
-    headless: process.env.CI ? 'new' : false, // Show browser in development
-    slowMo: process.env.CI ? 0 : 50, // Slow down in development for debugging
-    devtools: !process.env.CI, // Open devtools in development
+    headless: process.env.CI ? 'new' : false,
+    slowMo: process.env.CI ? 0 : 50,
+    devtools: !process.env.CI,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-web-security',
       '--disable-features=VizDisplayCompositor',
-      // Load the extension
-      `--load-extension=${__dirname}/source`,
-      '--disable-extensions-except=${__dirname}/source',
-      // Additional Chrome flags for extension testing
       '--allow-running-insecure-content',
       '--disable-background-timer-throttling',
       '--disable-backgrounding-occluded-windows',
-      '--disable-renderer-backgrounding'
-    ]
+      '--disable-renderer-backgrounding',
+      '--ignore-ssl-errors=true',
+      '--ignore-certificate-errors',
+      '--disable-blink-features=AutomationControlled',
+      '--disable-extensions-file-access-check',
+      // Extension-specific flags
+      `--load-extension=${__dirname}/source`,
+      `--disable-extensions-except=${__dirname}/source`,
+      // Allow extension to access file URLs
+      '--allow-file-access-from-files',
+      '--enable-local-file-accesses'
+    ],
+    timeout: 60000
   },
-  browserContext: 'default'
+  browserContext: 'default',
 };

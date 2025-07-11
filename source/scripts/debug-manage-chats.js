@@ -188,8 +188,8 @@
             const url = args[0];
             console.log('🌐 FETCH REQUEST:', url);
             
-            // Check if it's an ai-toolbox request
-            if (typeof url === 'string' && (url.includes('ai-toolbox') || url.includes('api.infi-dev.com'))) {
+            // Check if it's an example-removed request
+            if (typeof url === 'string' && (url.includes('example-removed') || url.includes('api.infi-dev.com'))) {
                 console.log('🎯 AI-Toolbox request detected - should be mocked');
             }
             

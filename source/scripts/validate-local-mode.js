@@ -45,7 +45,7 @@ function testUnifiedContextFix() {
     
     // Test external API blocking
     const blocksExternalAPIs = fixContent.includes('api.infi-dev.com') && 
-                              fixContent.includes('ai-toolbox') &&
+                              fixContent.includes('example-removed') &&
                               fixContent.includes('infi-dev');
     logResult('External API Blocking', blocksExternalAPIs, 
              blocksExternalAPIs ? 'External APIs are blocked' : 'Missing external API blocking');

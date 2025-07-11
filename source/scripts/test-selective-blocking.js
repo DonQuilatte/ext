@@ -20,22 +20,22 @@
     
     // Essential API endpoints that SHOULD work (core functionality)
     const essentialEndpoints = [
-        'https://api.infi-dev.com/ai-toolbox/folder/get',
-        'https://api.infi-dev.com/ai-toolbox/folder/list',
-        'https://api.infi-dev.com/ai-toolbox/conversation/get',
-        'https://api.infi-dev.com/ai-toolbox/conversation/list',
-        'https://api.infi-dev.com/ai-toolbox/auth/generate-jwt',
-        'https://api.infi-dev.com/ai-toolbox/prompts/get',
-        'https://api.infi-dev.com/ai-toolbox/user/profile'
+        'https://api.infi-dev.com/example-removed/folder/get',
+        'https://api.infi-dev.com/example-removed/folder/list',
+        'https://api.infi-dev.com/example-removed/conversation/get',
+        'https://api.infi-dev.com/example-removed/conversation/list',
+        'https://api.infi-dev.com/example-removed/auth/generate-jwt',
+        'https://api.infi-dev.com/example-removed/prompts/get',
+        'https://api.infi-dev.com/example-removed/user/profile'
     ];
     
     // Problematic API endpoints that SHOULD be blocked (cause infinite loops)
     const problematicEndpoints = [
-        'https://api.infi-dev.com/ai-toolbox/auth/jwks',
-        'https://api.infi-dev.com/ai-toolbox/subscription/check',
-        'https://api.infi-dev.com/ai-toolbox/auth/validate',
-        'https://api.infi-dev.com/ai-toolbox/auth/jwks?cacheBuster=123',
-        'https://api.infi-dev.com/ai-toolbox/test?jwksuri=something'
+        'https://api.infi-dev.com/example-removed/auth/jwks',
+        'https://api.infi-dev.com/example-removed/subscription/check',
+        'https://api.infi-dev.com/example-removed/auth/validate',
+        'https://api.infi-dev.com/example-removed/auth/jwks?cacheBuster=123',
+        'https://api.infi-dev.com/example-removed/test?jwksuri=something'
     ];
     
     // Test essential endpoints (should be allowed)
@@ -163,7 +163,7 @@
             };
             
             // Test a problematic endpoint
-            xhr.open('GET', 'https://api.infi-dev.com/ai-toolbox/auth/jwks');
+            xhr.open('GET', 'https://api.infi-dev.com/example-removed/auth/jwks');
             xhr.send();
         });
     }

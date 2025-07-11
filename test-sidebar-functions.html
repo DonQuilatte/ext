@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Sidebar Functions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .function-test {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .function-name {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .test-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .test-btn:hover {
+            background: #45a049;
+        }
+        .status {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .status.success {
+            color: #4CAF50;
+        }
+        .status.error {
+            color: #f44336;
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 5px;
+        }
+        .error-log {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sidebar Functions Test</h1>
+        <p>Testing the restored sidebar menu functions to ensure they no longer return "undefined".</p>
+        
+        <div class="function-test">
+            <div class="function-name">openInfoAndUpdates()</div>
+            <button class="test-btn" onclick="testFunction('openInfoAndUpdates')">Test Function</button>
+            <span class="status" id="status-openInfoAndUpdates"></span>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">showManageChatsModal()</div>
+            <button class="test-btn" onclick="testFunction('showManageChatsModal')">Test Function</button>
+            <span class="status" id="status-showManageChatsModal"></span>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">showManageFoldersModal()</div>
+            <button class="test-btn" onclick="testFunction('showManageFoldersModal')">Test Function</button>
+            <span class="status" id="status-showManageFoldersModal"></span>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">showManagePromptsModal()</div>
+            <button class="test-btn" onclick="testFunction('showManagePromptsModal')">Test Function</button>
+            <span class="status" id="status-showManagePromptsModal"></span>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">showMediaGalleryModal()</div>
+            <button class="test-btn" onclick="testFunction('showMediaGalleryModal')">Test Function</button>
+            <span class="status" id="status-showMediaGalleryModal"></span>
+        </div>
+        
+        <div class="function-test">
+            <div class="function-name">showHistorySearchModal()</div>
+            <button class="test-btn" onclick="testFunction('showHistorySearchModal')">Test Function</button>
+            <span class="status" id="status-showHistorySearchModal"></span>
+        </div>
+        
+        <div class="function-test">
+            <button class="test-btn" onclick="testAllFunctions()" style="background: #2196F3;">Test All Functions</button>
+            <button class="test-btn" onclick="clearResults()" style="background: #FF9800;">Clear Results</button>
+        </div>
+        
+        <div class="results" id="results" style="display: none;">
+            <h3>Test Results:</h3>
+            <div id="results-content"></div>
+        </div>
+        
+        <div class="error-log" id="error-log" style="display: none;">
+            <h4>Error Log:</h4>
+            <div id="error-content"></div>
+        </div>
+    </div>
+
+    <!-- Load the sidebar functions -->
+    <script src="dist/scripts/infoAndUpdates/openInfoAndUpdates.js"></script>
+    <script src="dist/scripts/manageChats/showManageChatsModal.js"></script>
+    <script src="dist/scripts/manageFolders/showManageFoldersModal.js"></script>
+    <script src="dist/scripts/managePrompts/showManagePromptsModal.js"></script>
+    <script src="dist/scripts/mediaGallery/showMediaGalleryModal.js"></script>
+    <script src="dist/scripts/historySearch/showHistorySearchModal.js"></script>
+
+    <script>
+        let testResults = [];
+        let errorLog = [];
+
+        function testFunction(functionName) {
+            console.log(`Testing ${functionName}...`);
+            const statusElement = document.getElementById(`status-${functionName}`);
+            
+            try {
+                // Check if function exists
+                if (typeof window[functionName] === 'undefined') {
+                    throw new Error(`Function ${functionName} is undefined`);
+                }
+                
+                // Check if function is actually a function
+                if (typeof window[functionName] !== 'function') {
+                    throw new Error(`${functionName} is not a function (type: ${typeof window[functionName]})`);
+                }
+                
+                // Try to call the function
+                const result = window[functionName]();
+                
+                // Check if result is undefined (the original problem)
+                if (result === undefined) {
+                    // This is actually OK for these functions since they don't return values
+                    statusElement.textContent = '✓ Function works (returns undefined as expected)';
+                    statusElement.className = 'status success';
+                    testResults.push(`${functionName}: SUCCESS - Function exists and executed`);
+                } else {
+                    statusElement.textContent = `✓ Function works (returned: ${result})`;
+                    statusElement.className = 'status success';
+                    testResults.push(`${functionName}: SUCCESS - Function returned: ${result}`);
+                }
+                
+            } catch (error) {
+                console.error(`Error testing ${functionName}:`, error);
+                statusElement.textContent = `✗ Error: ${error.message}`;
+                statusElement.className = 'status error';
+                testResults.push(`${functionName}: ERROR - ${error.message}`);
+                errorLog.push(`${functionName}: ${error.message}`);
+                
+                // Show error log
+                document.getElementById('error-log').style.display = 'block';
+                document.getElementById('error-content').innerHTML = errorLog.join('<br>');
+            }
+            
+            // Update results
+            updateResults();
+        }
+
+        function testAllFunctions() {
+            const functions = [
+                'openInfoAndUpdates',
+                'showManageChatsModal', 
+                'showManageFoldersModal',
+                'showManagePromptsModal',
+                'showMediaGalleryModal',
+                'showHistorySearchModal'
+            ];
+            
+            console.log('Testing all functions...');
+            testResults = [];
+            errorLog = [];
+            
+            // Hide error log initially
+            document.getElementById('error-log').style.display = 'none';
+            
+            functions.forEach(functionName => {
+                testFunction(functionName);
+            });
+            
+            // Show summary
+            const successCount = testResults.filter(r => r.includes('SUCCESS')).length;
+            const totalCount = functions.length;
+            
+            console.log(`Test completed: ${successCount}/${totalCount} functions working`);
+            
+            if (successCount === totalCount) {
+                alert(`✓ All ${totalCount} sidebar functions are working correctly!`);
+            } else {
+                alert(`⚠ ${successCount}/${totalCount} functions working. Check the results for details.`);
+            }
+        }
+
+        function clearResults() {
+            testResults = [];
+            errorLog = [];
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('error-log').style.display = 'none';
+            
+            // Clear status indicators
+            const statusElements = document.querySelectorAll('.status');
+            statusElements.forEach(el => {
+                el.textContent = '';
+                el.className = 'status';
+            });
+        }
+
+        function updateResults() {
+            if (testResults.length > 0) {
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('results-content').innerHTML = testResults.join('<br>');
+            }
+        }
+
+        // Test on page load
+        window.addEventListener('load', function() {
+            console.log('Page loaded, ready to test functions');
+            
+            // Auto-test all functions after a short delay
+            setTimeout(function() {
+                console.log('Auto-testing all functions...');
+                testAllFunctions();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -58,7 +58,7 @@
         
         // Test if problematic requests are blocked
         try {
-            fetch('https://api.infi-dev.com/ai-toolbox/auth/jwks?test=1')
+            fetch('https://api.infi-dev.com/example-removed/auth/jwks?test=1')
                 .then(() => {
                     logTest('CORS Blocking', false, 'CORS request went through - blocking failed');
                 })

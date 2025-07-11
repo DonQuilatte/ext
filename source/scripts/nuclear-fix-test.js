@@ -19,7 +19,7 @@
         
         // Test 2: Test fetch blocking
         console.log('🧪 Testing fetch blocking...');
-        fetch('https://api.infi-dev.com/ai-toolbox/auth/jwks?test=nuclear')
+        fetch('https://api.infi-dev.com/example-removed/auth/jwks?test=nuclear')
             .then(response => {
                 console.log('❌ CRITICAL: Fetch request succeeded (should be blocked):', response);
             })
@@ -31,7 +31,7 @@
         console.log('🧪 Testing XMLHttpRequest blocking...');
         try {
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', 'https://api.infi-dev.com/ai-toolbox/auth/jwks?test=nuclear-xhr');
+            xhr.open('GET', 'https://api.infi-dev.com/example-removed/auth/jwks?test=nuclear-xhr');
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 0) {
@@ -52,7 +52,7 @@
         // Test 4: Test Request constructor blocking
         console.log('🧪 Testing Request constructor blocking...');
         try {
-            const request = new Request('https://api.infi-dev.com/ai-toolbox/auth/jwks?test=nuclear-request');
+            const request = new Request('https://api.infi-dev.com/example-removed/auth/jwks?test=nuclear-request');
             console.log('❌ CRITICAL: Request constructor succeeded (should be blocked)');
         } catch (error) {
             console.log('✅ Request constructor blocked as expected:', error.message);
@@ -60,11 +60,11 @@
         
         // Test 5: Test various URL patterns
         const testUrls = [
-            'https://api.infi-dev.com/ai-toolbox/auth/jwks',
+            'https://api.infi-dev.com/example-removed/auth/jwks',
             'https://auth.openai.com/jwks',
             'https://api.infi-dev.com/test',
             'https://example.com/jwks',
-            'https://test.com/ai-toolbox',
+            'https://test.com/example-removed',
             'https://test.com/infi-dev',
             'https://test.com/cacheBuster=123'
         ];

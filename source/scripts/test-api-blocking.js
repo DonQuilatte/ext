@@ -10,7 +10,7 @@
     // Test 2: Try to fetch from the blocked API
     console.log('2. Testing fetch to api.infi-dev.com...');
     
-    fetch('https://api.infi-dev.com/ai-toolbox/folder/get', {
+    fetch('https://api.infi-dev.com/example-removed/folder/get', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

@@ -23,11 +23,11 @@
         console.log('\n🚫 TEST 1: External API Blocking');
         
         const externalEndpoints = [
-            'https://api.infi-dev.com/ai-toolbox/folder/get',
-            'https://api.infi-dev.com/ai-toolbox/conversation/get',
-            'https://api.infi-dev.com/ai-toolbox/auth/generate-jwt',
-            'https://api.infi-dev.com/ai-toolbox/auth/jwks',
-            'https://api.infi-dev.com/ai-toolbox/subscription/check'
+            'https://api.infi-dev.com/example-removed/folder/get',
+            'https://api.infi-dev.com/example-removed/conversation/get',
+            'https://api.infi-dev.com/example-removed/auth/generate-jwt',
+            'https://api.infi-dev.com/example-removed/auth/jwks',
+            'https://api.infi-dev.com/example-removed/subscription/check'
         ];
         
         let allBlocked = true;

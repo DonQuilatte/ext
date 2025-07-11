@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const path = require('path');
 
 // Global test setup for Ishka Extension testing
@@ -21,22 +22,33 @@ global.testUtils = {
   // Wait for extension to load
   async waitForExtension(page) {
     try {
-      // Wait for extension popup to be accessible
-      await page.goto('chrome-extension://extension-popup');
-      await page.waitForSelector('[data-testid="extension-popup"]', { 
-        timeout: 10000 
-      }).catch(() => {
-        // Fallback: try to access extension via toolbar
-        return page.evaluate(() => {
-          return new Promise((resolve) => {
-            chrome.runtime.sendMessage({action: 'ping'}, (response) => {
-              resolve(response);
-            });
+      // Get the extension ID dynamically
+      const extensionId = await page.evaluate(() => {
+        return new Promise((resolve) => {
+          chrome.management.getAll((extensions) => {
+            const ishkaExtension = extensions.find(ext =>
+              ext.name.toLowerCase().includes('ishka') ||
+              ext.name.toLowerCase().includes('chatgpt')
+            );
+            resolve(ishkaExtension ? ishkaExtension.id : null);
           });
         });
-      });
-      return true;
+      }).catch(() => null);
+
+      if (extensionId) {
+        // Try to access extension popup with real ID
+        await page.goto(`chrome-extension://${extensionId}/popup.html`);
+        await page.waitForSelector('body', { timeout: 5000 });
+        return true;
+      } else {
+        // Fallback: check if extension is injected into current page
+        const extensionPresent = await page.evaluate(() => {
+          return document.querySelector('[class*="ishka"], [id*="ishka"]') !== null;
+        });
+        return extensionPresent;
+      }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.warn('Extension not fully loaded:', error.message);
       return false;
     }
@@ -44,17 +56,28 @@ global.testUtils = {
 
   // Navigate to ChatGPT and wait for page load
   async navigateToChatGPT(page) {
-    await page.goto(global.testConfig.chatgptUrl, { 
-      waitUntil: 'networkidle2',
-      timeout: global.testConfig.testTimeout 
-    });
-    
-    // Wait for ChatGPT interface to load
-    await page.waitForSelector('[data-testid="chat-input"], textarea[placeholder*="Message"]', { 
-      timeout: 15000 
-    }).catch(() => {
-      console.warn('ChatGPT interface may not be fully loaded');
-    });
+    try {
+      await page.goto(global.testConfig.chatgptUrl, { 
+        waitUntil: 'networkidle2',
+        timeout: global.testConfig.testTimeout 
+      });
+      
+      // Wait for ChatGPT interface to load
+      await page.waitForSelector('[data-testid="chat-input"], textarea[placeholder*="Message"], [data-testid="composer-text-input"]', { 
+        timeout: 15000 
+      }).catch(() => {
+        // eslint-disable-next-line no-console
+        console.warn('ChatGPT interface may not be fully loaded');
+      });
+      
+      // Give the extension time to inject
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn('Navigation to ChatGPT failed:', error.message);
+      // Try to continue with test anyway
+    }
   },
 
   // Check if extension is working by looking for its UI elements
@@ -123,8 +146,11 @@ global.testUtils = {
 
 // Configure test environment
 beforeAll(async () => {
+  // eslint-disable-next-line no-console
   console.log('🚀 Setting up Ishka Extension Test Environment');
+  // eslint-disable-next-line no-console
   console.log(`📁 Extension Path: ${global.testConfig.extensionPath}`);
+  // eslint-disable-next-line no-console
   console.log(`🌐 ChatGPT URL: ${global.testConfig.chatgptUrl}`);
   
   // Set default timeout for all tests
@@ -132,6 +158,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  // eslint-disable-next-line no-console
   console.log('🏁 Cleaning up test environment');
 });
 
@@ -139,11 +166,63 @@ afterAll(async () => {
 beforeEach(async () => {
   // Clear any previous test state
   if (global.page) {
-    await global.page.evaluate(() => {
-      localStorage.clear();
-      sessionStorage.clear();
-    });
+    try {
+      await global.page.evaluate(() => {
+        // Check if localStorage is accessible
+        if (typeof Storage !== 'undefined' && window.localStorage) {
+          localStorage.clear();
+        }
+        if (typeof Storage !== 'undefined' && window.sessionStorage) {
+          sessionStorage.clear();
+        }
+      });
+    } catch (error) {
+      // If localStorage access fails, just log it and continue
+      // eslint-disable-next-line no-console
+      console.warn('Could not clear storage:', error.message);
+    }
   }
 });
+
+// Enhanced setup for extension lifecycle testing
+const fs = require('fs-extra');
+
+// Ensure test directories exist
+beforeAll(async () => {
+  const testResultsDir = path.join(__dirname, '../test-results');
+  const screenshotsDir = path.join(__dirname, '../screenshots');
+  
+  await fs.ensureDir(testResultsDir);
+  await fs.ensureDir(screenshotsDir);
+  
+  console.log('📁 Test directories ensured for extension lifecycle tests');
+});
+
+// Global test timeout for extension lifecycle tests
+jest.setTimeout(120000);
+
+// Cleanup after all tests
+afterAll(async () => {
+  console.log('🧹 Global cleanup completed for extension lifecycle tests');
+});
+
+// Error handling for unhandled rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Global test configuration for extension lifecycle
+global.extensionLifecycleConfig = {
+  extensionPath: path.join(__dirname, '../source'),
+  headless: process.env.HEADLESS === 'true',
+  timeout: {
+    page: 30000,
+    element: 10000,
+    navigation: 60000
+  }
+};
+
+console.log('🚀 Extension lifecycle test environment initialized');
+console.log('Configuration:', global.extensionLifecycleConfig);
 
 module.exports = {};

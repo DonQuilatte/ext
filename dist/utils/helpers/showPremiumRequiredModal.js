@@ -1,0 +1,1 @@
+function showPremiumRequiredModal(e="feature"){return console.log(`🔓 LOCAL MODE: ${e} is now available in local mode - no premium required`),!1}"undefined"!=typeof module&&module.exports&&(module.exports={showPremiumRequiredModal}),window.showPremiumRequiredModal=showPremiumRequiredModal;

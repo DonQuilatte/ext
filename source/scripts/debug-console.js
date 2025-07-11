@@ -58,7 +58,7 @@
         
         // Test 3: Test external API call
         console.log('[MANUAL VERIFY] Testing external API call...');
-        fetch('https://api.infi-dev.com/ai-toolbox/auth/generate-jwt')
+        fetch('https://api.infi-dev.com/example-removed/auth/generate-jwt')
             .then(response => response.text())
             .then(text => {
                 if (text.includes('mock') || text.includes('jwt')) {

@@ -22,7 +22,7 @@
         
         try {
             // Test the main API endpoint
-            const response = await fetch('https://api.infi-dev.com/ai-toolbox/folder/get', {
+            const response = await fetch('https://api.infi-dev.com/example-removed/folder/get', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

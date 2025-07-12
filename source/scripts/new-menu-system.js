@@ -36,6 +36,13 @@
                 icon: '🖼️',
                 description: 'View and manage media files',
                 action: 'openMediaGallery'
+            },
+            {
+                id: 'test-extraction',
+                title: 'TEST - Real Data',
+                icon: '🔥',
+                description: 'Test real ChatGPT data extraction',
+                action: 'openTestExtraction'
             }
         ]
     };
@@ -67,13 +74,56 @@
                         </div>
                     </div>
                     <div class="action-buttons">
-                        <button class="action-btn primary" onclick="alert('Export feature coming soon!')">
+                        <button class="action-btn primary" data-action="export-chats">
                             📥 Export All Chats
                         </button>
-                        <button class="action-btn secondary" onclick="alert('Search feature coming soon!')">
+                        <button class="action-btn secondary" data-action="search-chats">
                             🔍 Search Chats
                         </button>
                     </div>
+                </div>
+            `);
+        },
+        
+        openTestExtraction: function() {
+            console.log('🔥 Opening Test Data Extraction...');
+            const data = this.extractChatGPTData();
+            
+            this.createModal('test-extraction', 'TEST - Real ChatGPT Data', `
+                <div class="menu-modal-content">
+                    <h3>🔥 Real ChatGPT Data Extraction Test</h3>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #4CAF50;">
+                        <h4 style="color: #333; margin: 0 0 10px 0;">📊 Extraction Results</h4>
+                        <p style="margin: 5px 0;"><strong>Conversations Found:</strong> ${data.extraction.conversations.length}</p>
+                        <p style="margin: 5px 0;"><strong>Working Selector:</strong> ${data.extraction.metadata.workingConversationSelector || 'None'}</p>
+                        <p style="margin: 5px 0;"><strong>Page URL:</strong> ${data.url}</p>
+                        <p style="margin: 5px 0;"><strong>Timestamp:</strong> ${data.timestamp}</p>
+                    </div>
+                    
+                    <h4>📋 Found Conversations (First 10)</h4>
+                    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 15px; background: #f9f9f9;">
+                        ${data.extraction.conversations.length > 0 ? data.extraction.conversations.slice(0, 10).map((conv, i) => `
+                            <div style="background: white; padding: 10px; margin: 8px 0; border-radius: 4px; border-left: 3px solid ${conv.isActive ? '#4CAF50' : '#2196F3'};">
+                                <strong>${i+1}. ${conv.title}</strong>${conv.isActive ? ' (ACTIVE)' : ''}<br>
+                                <small>Element: ${conv.element} | Classes: ${conv.classes || 'none'}</small><br>
+                                ${conv.href ? `<small>URL: ${conv.href}</small>` : ''}
+                            </div>
+                        `).join('') : '<p style="text-align: center; color: #666;">No conversations found</p>'}
+                        ${data.extraction.conversations.length > 10 ? `<p style="text-align: center; color: #666;">... and ${data.extraction.conversations.length - 10} more</p>` : ''}
+                    </div>
+                    
+                    <div class="action-buttons" style="margin-top: 20px;">
+                        <button class="action-btn primary" data-action="copy-test-data">
+                            📋 Copy Raw Data
+                        </button>
+                        <button class="action-btn secondary" data-action="export-chats">
+                            📥 Export All Data
+                        </button>
+                    </div>
+                    
+                    <p style="font-size: 14px; color: #888; margin-top: 20px;">
+                        🔥 This proves the extension can extract REAL ChatGPT data using working selectors.
+                    </p>
                 </div>
             `);
         },
@@ -103,10 +153,10 @@
                         </div>
                     </div>
                     <div class="action-buttons">
-                        <button class="action-btn primary" onclick="alert('Create folder feature coming soon!')">
+                        <button class="action-btn primary" data-action="create-folder">
                             ➕ Create New Folder
                         </button>
-                        <button class="action-btn secondary" onclick="alert('Import feature coming soon!')">
+                        <button class="action-btn secondary" data-action="import-folders">
                             📥 Import Folder Structure
                         </button>
                     </div>
@@ -139,10 +189,10 @@
                         </div>
                     </div>
                     <div class="action-buttons">
-                        <button class="action-btn primary" onclick="alert('Create prompt feature coming soon!')">
+                        <button class="action-btn primary" data-action="create-prompt">
                             ➕ Create New Prompt
                         </button>
-                        <button class="action-btn secondary" onclick="alert('Browse library feature coming soon!')">
+                        <button class="action-btn secondary" data-action="browse-library">
                             📚 Browse Library
                         </button>
                     </div>
@@ -184,10 +234,10 @@
                         </div>
                     </div>
                     <div class="action-buttons">
-                        <button class="action-btn primary" onclick="alert('Download all feature coming soon!')">
+                        <button class="action-btn primary" data-action="download-all">
                             📥 Download All
                         </button>
-                        <button class="action-btn secondary" onclick="alert('Create album feature coming soon!')">
+                        <button class="action-btn secondary" data-action="create-album">
                             📚 Create Album
                         </button>
                     </div>
@@ -211,13 +261,13 @@
                     <div class="modal-container">
                         <div class="modal-header">
                             <h2>${title}</h2>
-                            <button class="close-btn" onclick="MenuActions.closeModal()">&times;</button>
+                            <button class="close-btn" data-action="close-modal">&times;</button>
                         </div>
                         <div class="modal-body">
                             ${content}
                         </div>
                         <div class="modal-footer">
-                            <button class="action-btn secondary" onclick="MenuActions.closeModal()">Close</button>
+                            <button class="action-btn secondary" data-action="close-modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -229,6 +279,14 @@
             modal.querySelector('.modal-overlay').addEventListener('click', function(e) {
                 if (e.target === this) {
                     MenuActions.closeModal();
+                }
+            });
+            
+            // Handle all data-action buttons with event delegation
+            modal.addEventListener('click', function(e) {
+                const action = e.target.getAttribute('data-action');
+                if (action) {
+                    MenuActions.handleAction(action, e.target);
                 }
             });
             
@@ -247,6 +305,283 @@
                 modal.remove();
                 console.log('✅ Modal closed');
             }
+        },
+        
+        // Real data extraction function (from successful test extension)
+        extractChatGPTData: function() {
+            console.log('🔍 Starting ChatGPT data extraction...');
+            
+            const results = {
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                extraction: {
+                    conversations: [],
+                    currentMessages: [],
+                    metadata: {}
+                },
+                selectors: {
+                    working: [],
+                    failed: []
+                }
+            };
+            
+            // Extract conversations using proven selectors
+            const conversationSelectors = [
+                'nav a',           // Primary working selector
+                'nav ol li', 
+                'nav ul li',
+                'nav li',
+                'aside ol li',
+                'aside ul li', 
+                'aside a',
+                '[class*="conversation"]',
+                '[class*="chat-"]',
+                'a[href*="/c/"]'
+            ];
+            
+            let conversationsFound = 0;
+            let workingSelector = null;
+            
+            for (const selector of conversationSelectors) {
+                try {
+                    const elements = document.querySelectorAll(selector);
+                    
+                    if (elements.length > 0) {
+                        console.log(`✅ Selector "${selector}" found ${elements.length} elements`);
+                        
+                        const conversationElements = Array.from(elements).filter(elem => {
+                            const text = elem.textContent?.trim() || '';
+                            return text.length > 5 && text.length < 300;
+                        });
+                        
+                        if (conversationElements.length > conversationsFound) {
+                            conversationsFound = conversationElements.length;
+                            workingSelector = selector;
+                            results.selectors.working.push(selector);
+                            
+                            // Clear previous results
+                            results.extraction.conversations = [];
+                            
+                            // Extract conversation data
+                            conversationElements.forEach((element, index) => {
+                                const conversation = {
+                                    index: index,
+                                    title: element.textContent?.trim() || `Conversation ${index + 1}`,
+                                    element: element.tagName,
+                                    selector: selector,
+                                    classes: element.className || '',
+                                    id: element.id || '',
+                                    href: element.href || element.closest('a')?.href || '',
+                                    isActive: element.classList.contains('active') || 
+                                             element.getAttribute('aria-current') === 'page' ||
+                                             element.classList.contains('selected')
+                                };
+                                
+                                results.extraction.conversations.push(conversation);
+                            });
+                            
+                            break;
+                        }
+                    } else {
+                        results.selectors.failed.push(selector);
+                    }
+                } catch (e) {
+                    results.selectors.failed.push(`${selector} (error: ${e.message})`);
+                }
+            }
+            
+            console.log(`📊 Found ${conversationsFound} conversations using selector: ${workingSelector}`);
+            
+            // Extract metadata
+            results.extraction.metadata = {
+                title: document.title,
+                url: window.location.href,
+                currentConversationId: window.location.pathname.includes('/c/') ? 
+                                       window.location.pathname.split('/c/')[1] : null,
+                hasReactRoot: !!document.querySelector('[data-reactroot]'),
+                hasNextData: !!window.__NEXT_DATA__,
+                totalElements: document.querySelectorAll('*').length,
+                workingConversationSelector: workingSelector
+            };
+            
+            console.log('✅ Data extraction complete:', results);
+            return results;
+        },
+        
+        // Action handler for all data-action buttons
+        handleAction: function(action, element) {
+            console.log(`🎯 Handling action: ${action}`);
+            
+            switch(action) {
+                case 'close-modal':
+                    this.closeModal();
+                    break;
+                    
+                case 'export-chats':
+                    this.exportChats();
+                    break;
+                    
+                case 'search-chats':
+                    this.searchChats();
+                    break;
+                    
+                case 'create-folder':
+                    this.createFolder();
+                    break;
+                    
+                case 'import-folders':
+                    this.importFolders();
+                    break;
+                    
+                case 'create-prompt':
+                    this.createPrompt();
+                    break;
+                    
+                case 'browse-library':
+                    this.browseLibrary();
+                    break;
+                    
+                case 'download-all':
+                    this.downloadAllMedia();
+                    break;
+                    
+                case 'create-album':
+                    this.createAlbum();
+                    break;
+                    
+                case 'copy-test-data':
+                    this.copyTestData();
+                    break;
+                    
+                default:
+                    console.warn(`Unknown action: ${action}`);
+                    alert(`Action "${action}" not implemented yet`);
+            }
+        },
+        
+        // Real action implementations
+        exportChats: function() {
+            console.log('📥 Exporting chats...');
+            const data = this.extractChatGPTData();
+            
+            if (data.extraction.conversations.length === 0) {
+                alert('No conversations found to export. Make sure you are on ChatGPT with conversations visible.');
+                return;
+            }
+            
+            // Create downloadable JSON file
+            const exportData = {
+                exportDate: new Date().toISOString(),
+                totalConversations: data.extraction.conversations.length,
+                conversations: data.extraction.conversations,
+                metadata: data.extraction.metadata
+            };
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `chatgpt-conversations-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert(`✅ Exported ${data.extraction.conversations.length} conversations to JSON file`);
+        },
+        
+        searchChats: function() {
+            console.log('🔍 Opening chat search...');
+            const data = this.extractChatGPTData();
+            
+            if (data.extraction.conversations.length === 0) {
+                alert('No conversations found to search. Make sure you are on ChatGPT with conversations visible.');
+                return;
+            }
+            
+            const searchHtml = `
+                <div class="search-interface">
+                    <h3>🔍 Search ${data.extraction.conversations.length} Conversations</h3>
+                    <input type="text" id="chat-search-input" placeholder="Search conversation titles..." style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+                    <div id="search-results" style="max-height: 400px; overflow-y: auto;">
+                        ${data.extraction.conversations.map((conv, i) => `
+                            <div class="search-result-item" style="padding: 8px; border-bottom: 1px solid #eee; cursor: pointer;" data-href="${conv.href}">
+                                <strong>${conv.title}</strong>
+                                <small style="display: block; color: #666;">Index: ${i + 1} | ${conv.isActive ? 'Currently Active' : 'Click to open'}</small>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            this.createModal('search-chats', 'Search Conversations', searchHtml);
+            
+            // Add search functionality
+            setTimeout(() => {
+                const searchInput = document.getElementById('chat-search-input');
+                const searchResults = document.getElementById('search-results');
+                
+                if (searchInput && searchResults) {
+                    searchInput.addEventListener('input', function() {
+                        const query = this.value.toLowerCase();
+                        const items = searchResults.querySelectorAll('.search-result-item');
+                        
+                        items.forEach(item => {
+                            const title = item.textContent.toLowerCase();
+                            item.style.display = title.includes(query) ? 'block' : 'none';
+                        });
+                    });
+                    
+                    // Add click handlers for search results
+                    searchResults.addEventListener('click', function(e) {
+                        const item = e.target.closest('.search-result-item');
+                        if (item && item.getAttribute('data-href')) {
+                            const href = item.getAttribute('data-href');
+                            if (href) {
+                                window.location.href = href;
+                            } else {
+                                alert('No URL found for this conversation');
+                            }
+                        }
+                    });
+                }
+            }, 100);
+        },
+        
+        createFolder: function() {
+            alert('Folder creation feature - This would integrate with ChatGPT\'s folder system when available');
+        },
+        
+        importFolders: function() {
+            alert('Folder import feature - This would import folder structures from file');
+        },
+        
+        createPrompt: function() {
+            alert('Prompt creation feature - This would create custom prompt templates');
+        },
+        
+        browseLibrary: function() {
+            alert('Prompt library feature - This would show available prompt templates');
+        },
+        
+        downloadAllMedia: function() {
+            alert('Media download feature - This would download images/files from conversations');
+        },
+        
+        createAlbum: function() {
+            alert('Album creation feature - This would organize media into albums');
+        },
+        
+        copyTestData: function() {
+            console.log('📋 Copying test data to clipboard...');
+            const data = this.extractChatGPTData();
+            
+            navigator.clipboard.writeText(JSON.stringify(data, null, 2))
+                .then(() => {
+                    alert(`✅ Copied raw extraction data to clipboard!\n\nFound ${data.extraction.conversations.length} conversations using selector: ${data.extraction.metadata.workingConversationSelector}`);
+                })
+                .catch(() => {
+                    alert('❌ Copy failed - check console for data');
+                    console.log('Raw extraction data:', data);
+                });
         }
     };
     

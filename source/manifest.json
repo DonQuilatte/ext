@@ -62,7 +62,13 @@
         "styles/dnd.css",
         "styles/infoAndUpdates.css"
       ],
-      "run_at": "document_start"
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["scripts/*.js", "styles/*.css", "assets/*"],
+      "matches": ["https://chatgpt.com/*"]
     }
   ],
   "permissions": [
